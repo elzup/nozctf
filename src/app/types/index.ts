@@ -10,3 +10,8 @@ export type Commit = {
   text: string
   timestamp: number
 }
+
+export type Question = {
+  num: number
+  text: string
+}
