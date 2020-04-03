@@ -4,19 +4,24 @@ import * as firebase from 'firebase'
 import { useCollection } from 'react-firebase-hooks/firestore'
 import { useAuthState } from 'react-firebase-hooks/auth'
 
-import { getFirestore } from '../../service/firebase'
-import App from '../App'
+import { getFirestore } from '../service/firebase'
+import App from './App'
 
 const fdb = getFirestore()
 
-function TopPage() {
+type Props = {
+  qid: number
+}
+const QuestionLayout: React.FC<Props> = ({ qid, children }) => {
   const [user, loading, error] = useAuthState(firebase.auth())
   const [text, setText] = useState<string>('')
 
   return (
     <App>
       <div></div>
+      {children}
     </App>
   )
 }
-export default TopPage
+
+export default QuestionLayout
