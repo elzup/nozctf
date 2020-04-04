@@ -5,14 +5,15 @@ import { useCollection } from 'react-firebase-hooks/firestore'
 import { useAuthState } from 'react-firebase-hooks/auth'
 
 import { getFirestore } from '../service/firebase'
+import { Question } from '../types'
 import App from './App'
 
 const fdb = getFirestore()
 
 type Props = {
-  qid: number
+  q: Question
 }
-const QuestionLayout: React.FC<Props> = ({ qid, children }) => {
+const QuestionLayout: React.FC<Props> = ({ children }) => {
   const [user, loading, error] = useAuthState(firebase.auth())
   const [text, setText] = useState<string>('')
 

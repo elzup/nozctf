@@ -1,9 +1,17 @@
-import { useRouter } from 'next/dist/client/router'
-import QuestionLayout from '../../components/QuestionLayout'
+import dynamic from 'next/dynamic'
+import { questions } from '../../questions'
+
+const QuestionLayout = dynamic(
+  () => import('../../components/QuestionLayout'),
+  {
+    ssr: false,
+  }
+)
 
 export default () => {
-  const router = useRouter()
-  const qid = Number(router.query.id)
+  const question = questions[1]
 
-  return <QuestionLayout qid={qid}>計算結果を答えてください。</QuestionLayout>
+  return (
+    <QuestionLayout q={question}>計算結果を答えてください。</QuestionLayout>
+  )
 }
