@@ -1,9 +1,8 @@
-import { useState } from 'react'
-import { Button, Input, Typography } from '@material-ui/core'
 import * as firebase from 'firebase'
-import { useCollection } from 'react-firebase-hooks/firestore'
+import Link from 'next/link'
+import { useState } from 'react'
 import { useAuthState } from 'react-firebase-hooks/auth'
-
+import { questions } from '../../questions'
 import { getFirestore } from '../../service/firebase'
 import App from '../App'
 
@@ -15,7 +14,13 @@ function TopPage() {
 
   return (
     <App>
-      <div></div>
+      <ul>
+        {questions.map((q) => (
+          <li key={q.num}>
+            <Link href={`/q/${q.num}`}>{q.text}</Link>
+          </li>
+        ))}
+      </ul>
     </App>
   )
 }
