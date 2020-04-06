@@ -1,5 +1,6 @@
 import { Button } from '@material-ui/core'
 import { useAuthState } from 'react-firebase-hooks/auth'
+import Router from 'next/router'
 import { getAuth } from '../service/firebase'
 
 const { auth, login, logout } = getAuth()
@@ -17,7 +18,11 @@ window.React2 = require('react')
 console.log(window.React1 === window.React2)
 
 function LoginButton() {
-  const [user] = useAuthState(auth)
+  const [user, loading] = useAuthState(auth)
+
+  if (!loading) {
+    return
+  }
 
   return (
     <header>

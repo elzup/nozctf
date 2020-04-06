@@ -40,3 +40,10 @@ export const getFirestore = () => {
   init()
   return firebase.firestore()
 }
+
+export const usableUserId = async (userId: string) => {
+  const fdb = getFirestore()
+  const docs = await fdb.collection('user').where('id', '==', userId).get()
+
+  return docs.size === 0
+}
