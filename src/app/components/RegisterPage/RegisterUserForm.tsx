@@ -40,7 +40,13 @@ function RegisterUserForm(props: Props) {
         label="ユーザID"
         value={formik.values.username}
         onChange={(e) => {
-          formik.setFieldValue('username', e.target.value.trim().toLowerCase())
+          formik.setFieldValue(
+            'username',
+            e.target.value
+              .trim()
+              .replace(/[^0-9a-zA-Z]/g, '')
+              .toLowerCase()
+          )
         }}
         type="text"
         autoComplete="username"
