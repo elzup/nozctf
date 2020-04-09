@@ -4,13 +4,17 @@ service cloud.firestore {
     function isAuthenticated() {
       return request.auth != null;
     }
-    function isUserAuthenticated(userId) {
-      return request.auth.uid == userId;
+    function isUserAuthenticated(uid) {
+      return request.auth.uid == uid;
+    }
+    function validId(id) {
+      return id.size() > 0 && id.size() <= 20 && id.matches('^[0-9a-z]+$')
     }
 
-    match /user/{userId} {
-      allow create, read: if isAuthenticated();
-      allow update: if isUserAuthenticated(userId);
+    match /user/{uid} {
+      allow read: if true
+      allow create: if isUserAuthenticated(uid) && validId(request.resource.data.id);
+      // allow update: if isUserAuthenticated(uid);
       match /img {
         allow read;
         allow create, update, delete: if isUserAuthenticated(userId);

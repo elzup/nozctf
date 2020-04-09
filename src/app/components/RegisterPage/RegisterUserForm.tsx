@@ -39,6 +39,8 @@ function RegisterUserForm(props: Props) {
         name="username"
         label="ユーザID"
         value={formik.values.username}
+        helperText={formik.touched.username ? formik.errors.username : ''}
+        error={!!formik.errors.username}
         onChange={(e) => {
           formik.setFieldValue(
             'username',

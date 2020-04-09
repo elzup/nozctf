@@ -23,21 +23,18 @@ function RegisterMain({ uid }: { uid: string }) {
   return (
     <div>
       <RegisterUserForm
-        onSubmit={(fields, setErorrs) => {
-          if (!usableUserId(fields.username)) {
+        onSubmit={async (fields, setErorrs) => {
+          const usable = await usableUserId(fields.username)
+
+          if (!usable) {
             setErorrs({ username: 'すでに使われているIDです' })
             return
           }
-          fdb
-            .collection('user')
-            .doc(uid)
-            .set({
-              id: fields.username,
-            })
-            .then(() => {
-              alert('登録しました')
-              Router.push('/')
-            })
+          await fdb.collection('user').doc(uid).set({
+            id: fields.username,
+          })
+          alert('登録しました')
+          Router.push('/')
         }}
       />
     </div>
