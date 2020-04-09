@@ -29,3 +29,13 @@ export type LoginInfo =
       uid: string
       user: User
     }
+
+export type Solve = {
+  solvedAt: number
+}
+
+export type Solves = {
+  [userId: string]: {
+    [qid: string]: Solve
+  }
+}

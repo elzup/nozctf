@@ -40,6 +40,9 @@ export const getFirestore = () => {
   init()
   return firebase.firestore()
 }
+export const solveRef = (userId: string) => {
+  return getFirestore().collection('solve').doc(userId)
+}
 
 export const usableUserId = async (userId: string) => {
   const fdb = getFirestore()

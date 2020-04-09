@@ -1,26 +1,30 @@
-import { useState } from 'react'
-import { Button, Input, Typography } from '@material-ui/core'
-import * as firebase from 'firebase'
-import { useCollection } from 'react-firebase-hooks/firestore'
-import { useAuthState } from 'react-firebase-hooks/auth'
-
+import { Typography } from '@material-ui/core'
+import { useContext } from 'react'
 import { getFirestore } from '../service/firebase'
 import { Question } from '../types'
-import App from './App'
+import App, { LoginContext } from './App'
+import AnswerForm from './AnswerForm'
 
 const fdb = getFirestore()
 
 type Props = {
   q: Question
 }
-const QuestionLayout: React.FC<Props> = ({ children }) => {
-  const [user, loading, error] = useAuthState(firebase.auth())
-  const [text, setText] = useState<string>('')
+const QuestionLayout: React.FC<Props> = ({ q, children }) => {
+  const [login] = useContext(LoginContext)
 
   return (
     <App>
-      <div></div>
-      {children}
+      <Typography variant="h4">
+        {q.num}. {q.text}
+      </Typography>
+      <section>{children}</section>
+      <AnswerForm
+        disabled={login.status !== 'comp'}
+        onSubmit={(v) => {
+          // v.flag
+        }}
+      />
     </App>
   )
 }
