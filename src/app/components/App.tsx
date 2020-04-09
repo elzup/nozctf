@@ -8,25 +8,11 @@ import {
 } from 'react'
 import Router from 'next/router'
 import { getAuth, getFirestore } from '../service/firebase'
-import { User } from '../types'
+import { User, LoginInfo } from '../types'
 import Header from './Header'
 
 const { auth } = getAuth()
 const fdb = getFirestore()
-
-type LoginInfo =
-  | {
-      status: 'none'
-    }
-  | {
-      status: 'auth'
-      uid: string
-    }
-  | {
-      status: 'comp'
-      uid: string
-      user: User
-    }
 
 export const LoginContext = createContext<
   [LoginInfo, Dispatch<SetStateAction<LoginInfo>>]
@@ -46,7 +32,9 @@ const App = ({ children }: { children?: unknown }) => {
   const [fuser, loading] = useAuthState(auth)
 
   useEffect(() => {
-    if (loading) return
+    setLogin({ status: 'none' })
+    if (loading || !fuser) return
+    setLogin({ status: 'auth', uid: fuser.uid })
     fdb
       .collection('user')
       .doc(fuser.uid)
@@ -69,7 +57,7 @@ const App = ({ children }: { children?: unknown }) => {
   return (
     <LoginContext.Provider value={[login, setLogin]}>
       <main>
-        <Header />
+        <Header login={login} />
         {children}
       </main>
     </LoginContext.Provider>

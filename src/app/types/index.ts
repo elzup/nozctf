@@ -15,3 +15,17 @@ export type Question = {
   num: number
   text: string
 }
+
+export type LoginInfo =
+  | {
+      status: 'none'
+    }
+  | {
+      status: 'auth'
+      uid: string
+    }
+  | {
+      status: 'comp'
+      uid: string
+      user: User
+    }

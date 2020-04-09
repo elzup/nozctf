@@ -1,12 +1,11 @@
-import Link from 'next/link'
-import { useContext } from 'react'
 import { Typography } from '@material-ui/core'
+import { LoginInfo } from '../types'
 import LoginButton from './LoginButton'
-import { LoginContext } from './App'
 
-export default ({ pathname }: { pathname?: unknown }) => {
-  const [login] = useContext(LoginContext)
-
+type Props = {
+  login: LoginInfo
+}
+function Header({ login }: Props) {
   return (
     <header>
       Score Form
@@ -15,3 +14,4 @@ export default ({ pathname }: { pathname?: unknown }) => {
     </header>
   )
 }
+export default Header

@@ -1,22 +1,17 @@
-import { Button, Typography } from '@material-ui/core'
-import { useAuthState } from 'react-firebase-hooks/auth'
+import { Button } from '@material-ui/core'
+import { useContext } from 'react'
 import { getAuth } from '../service/firebase'
+import { LoginContext } from './App'
 
-const { auth, login, logout } = getAuth()
+const { login, logout } = getAuth()
 
 function LoginButton() {
-  const [user, loading] = useAuthState(auth)
+  const [logins] = useContext(LoginContext)
 
-  if (loading) {
-    return <Typography>loading</Typography>
+  if (logins.status === 'none') {
+    return <Button onClick={() => login()}>Google ログイン</Button>
   }
-
-  return (
-    <header>
-      {user && <Button onClick={() => logout()}>ログアウト</Button>}
-      {!user && <Button onClick={() => login()}>Google ログイン</Button>}
-    </header>
-  )
+  return <Button onClick={() => logout()}>ログアウト</Button>
 }
 
 export default LoginButton

@@ -32,7 +32,7 @@ export const getAuth = () => {
   return {
     auth,
     login: () => auth.signInWithPopup(provider),
-    logout: auth.signOut,
+    logout: () => auth.signOut(),
   }
 }
 
