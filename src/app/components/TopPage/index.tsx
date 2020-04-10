@@ -11,7 +11,9 @@ function ListWithLogin({ user }: { user: User }) {
     <ul>
       {questions.map((q) => (
         <li key={q.num}>
-          <Link href={`/q/${q.num}`}>{q.text}</Link>
+          <Link href={`/q/${q.num}`}>
+            <a>{q.text}</a>
+          </Link>
         </li>
       ))}
     </ul>
@@ -23,7 +25,9 @@ function List() {
     <ul>
       {questions.map((q) => (
         <li key={q.num}>
-          <Link href={`/q/${q.num}`}>{q.text}</Link>
+          <Link href={`/q/${q.num}`}>
+            <a>{q.text}</a>
+          </Link>
         </li>
       ))}
     </ul>

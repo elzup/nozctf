@@ -14,17 +14,23 @@ export type Props = {
   ) => void
 }
 
-const schema = Yup.object().shape({
-  username: Yup.string().max(20, 'IDが長すぎます').required('入力してください'),
+const validationSchema = Yup.object<Fields>().shape({
+  flag: Yup.string().required('入力してください'),
 })
 
 function AnswerForm(props: Props) {
   const formik = useFormik<Fields>({
     initialValues: { flag: '' },
-    onSubmit: (values, { setErrors }) => props.onSubmit(values, setErrors),
+    onSubmit: (values, { setErrors }) => {
+      console.log('sumbit on formik')
+
+      props.onSubmit(values, setErrors)
+    },
+    validate: () => ({}),
+
     validateOnChange: false,
-    validateOnBlur: true,
-    validationSchema: schema,
+    validateOnBlur: false,
+    validationSchema,
   })
 
   return (
@@ -40,19 +46,16 @@ function AnswerForm(props: Props) {
         name="flag"
         label="Flag"
         value={formik.values.flag}
-        disabled={props.disabled}
+        // disabled={props.disabled}
         helperText={props.disabled && 'need login'}
         onChange={(e) => {
           formik.setFieldValue(
             'flag',
-            e.target.value
-              .trim()
-              .replace(/[^_0-9a-zA-Z]/g, '')
-              .toLowerCase()
+            e.target.value.trim().replace(/[^_0-9a-zA-Z]/g, '')
           )
         }}
         type="text"
-        autoComplete="username"
+        autoComplete="off"
         margin="normal"
         required
       />
@@ -61,7 +64,7 @@ function AnswerForm(props: Props) {
         type="submit"
         variant="outlined"
         color="primary"
-        disabled={props.disabled}
+        // disabled={props.disabled}
       >
         Submit
       </Button>
