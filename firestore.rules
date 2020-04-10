@@ -23,5 +23,8 @@ service cloud.firestore {
     match /solved {
       allow read;
     }
+    match /ans {
+      allow read, create, update, delete: if false;
+    }
   }
 }
