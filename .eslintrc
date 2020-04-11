@@ -1,5 +1,8 @@
 {
   "extends": ["nzap", "nzap/react", "nzap/typescript"],
+  "parserOptions": {
+    "project": "./src/app/tsconfig.json"
+  },
   "rules": {
     "react/react-in-jsx-scope": 0,
     "react/display-name": 0

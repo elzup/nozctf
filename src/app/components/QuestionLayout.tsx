@@ -1,12 +1,9 @@
 import { Typography } from '@material-ui/core'
 import { useContext } from 'react'
 import axios from 'axios'
-import { getFirestore } from '../service/firebase'
 import { Question } from '../types'
 import App, { LoginContext } from './App'
 import AnswerForm from './AnswerForm'
-
-const fdb = getFirestore()
 
 function AnswerFormContainer({ qid }: { qid: number }) {
   const [login] = useContext(LoginContext)

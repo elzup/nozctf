@@ -45,7 +45,7 @@ function RegisterPage() {
   const [user, loading] = useAuthState(auth)
 
   if (loading) return <Typography>loading</Typography>
-  if (!loading && !user) {
+  if (!user) {
     Router.push('/') // NOTE: not login
     return null
   }
