@@ -1,6 +1,5 @@
 import { Typography } from '@material-ui/core'
 import { useContext } from 'react'
-import axios from 'axios'
 import { Question } from '../types'
 import App, { LoginContext } from './App'
 import AnswerForm from './AnswerForm'
@@ -15,10 +14,6 @@ function AnswerFormContainer({ qid }: { qid: number }) {
         console.log({ flag })
 
         console.log('sumbit on callback')
-        axios
-          .post('/solve', { q: qid, flag })
-          .then(console.log)
-          .catch(console.error)
       }}
     />
   )
