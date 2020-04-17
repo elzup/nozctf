@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import path from 'path'
-import * as functions from 'firebase-functions'
 import * as admin from 'firebase-admin'
 import next from 'next'
+
+import * as functions from 'firebase-functions'
 
 // const dev = process.env.NODE_ENV !== 'production'
 const dev = false
@@ -14,14 +16,16 @@ const app = next({
 })
 const handle = app.getRequestHandler()
 
-export const nextApp = functions.https.onRequest((req, res) => {
-  console.log('File: ' + req.originalUrl)
-  if (req.path === '/solve') {
-    res.send({ ok: solve(req) })
-    return
-  }
-  return app.prepare().then(() => handle(req, res))
-})
+export const nextApp = functions
+  .region('asia-northeast1')
+  .https.onRequest(async (req, res) => {
+    console.log('File: ' + req.originalUrl)
+    if (req.path === '/solve') {
+      res.send({ ok: solve(req) })
+      return
+    }
+    return app.prepare().then(() => handle(req, res))
+  })
 
 type SolveQuery = {
   q: number
