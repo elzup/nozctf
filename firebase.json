@@ -1,23 +1,14 @@
 {
   "functions": {
-    "source": "dist/functions",
     "predeploy": [
-      "npm run typecheck-app",
-      "npm run build-functions",
-      "npm run build-app",
-      "npm run copy-deps",
-      "npm run install-deps"
+      "npm --prefix \"$RESOURCE_DIR\" run lint",
+      "npm --prefix \"$RESOURCE_DIR\" run build"
     ]
   },
   "hosting": {
-    "public": "dist/public",
-    "rewrites": [
-      {
-        "source": "**/**",
-        "function": "nextApp"
-      }
-    ],
-    "predeploy": "npm run build-public"
+    "public": "dist",
+    "rewrites": [{ "source": "solve", "function": "solve" }],
+    "predeploy": "yarn export"
   },
   "emulators": {
     "firestore": { "host": "localhost", "port": "4000" }
