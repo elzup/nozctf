@@ -7,7 +7,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "dev": "next src",
+    "dev": "next",
     "lint": "eslint --ext .ts,.tsx src",
     "serve": "cross-env NODE_ENV=production firebase serve",
     "deploy": "firebase deploy",
