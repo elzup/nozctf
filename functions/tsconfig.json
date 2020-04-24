@@ -1,17 +1,15 @@
 {
   "compilerOptions": {
-    "lib": ["es6", "dom", "es2016"],
     "module": "commonjs",
-    "strict": true,
-    "outDir": "../../dist/functions",
+    "noImplicitReturns": true,
+    "noImplicitAny": true,
+    // "noUnusedLocals": true,
+    "outDir": "lib",
     "sourceMap": true,
-    "target": "es2017",
-    "baseUrl": "./",
-    "forceConsistentCasingInFileNames": true,
-    "noImplicitAny": false,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true
+    "strict": true,
+    "typeRoots": ["./src"],
+    "target": "es2017"
   },
-  "compileOnSave": true
+  "compileOnSave": true,
+  "include": ["src"]
 }
