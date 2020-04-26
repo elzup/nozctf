@@ -6,7 +6,8 @@
   "hosting": {
     "public": "out",
     "rewrites": [{ "source": "solve", "function": "solve" }],
-    "predeploy": "yarn export"
+    "predeploy": "yarn export",
+    "cleanUrls": true
   },
   "emulators": {
     "firestore": { "host": "localhost", "port": "4000" }
