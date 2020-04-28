@@ -1,8 +1,9 @@
 import { Typography } from '@material-ui/core'
 import { useContext } from 'react'
+import { solve } from '../service/api'
 import { Question } from '../types'
-import App, { LoginContext } from './App'
 import AnswerForm from './AnswerForm'
+import App, { LoginContext } from './App'
 
 function AnswerFormContainer({ qid }: { qid: number }) {
   const [login] = useContext(LoginContext)
@@ -12,6 +13,9 @@ function AnswerFormContainer({ qid }: { qid: number }) {
       disabled={login.status !== 'comp'}
       onSubmit={({ flag }) => {
         console.log({ flag })
+        solve(qid, flag).then((res) => {
+          alert(res.data)
+        })
 
         console.log('sumbit on callback')
       }}
