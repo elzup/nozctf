@@ -8,5 +8,5 @@ const client = axios.create({
 config.env === 'production'
 
 export function solve(qid: number, flag: string) {
-  return client.post('/solve', { q: qid, flag })
+  return client.post('/answer', { q: qid, flag })
 }

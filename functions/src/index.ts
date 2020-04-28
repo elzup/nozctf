@@ -10,9 +10,16 @@ type Answer = {
   flag: string
 }
 
-export const solve = functions
+export const answer = functions
   .region('asia-northeast1')
   .https.onRequest(async (req, res) => {
+    const allowedOrigins = ['http://127.0.0.1:8020', 'http://localhost:8000']
+    const origin = req.headers.origin
+
+    if (typeof origin === 'string' && allowedOrigins.includes(origin)) {
+      res.setHeader('Access-Control-Allow-Origin', origin)
+    }
+    res.set('Access-Control-Allow-Methods', 'OPTIONS, POST')
     const token = req.headers.authorization?.split('Bearer ')[1]
 
     if (!token) {

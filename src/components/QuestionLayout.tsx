@@ -14,7 +14,9 @@ function AnswerFormContainer({ qid }: { qid: number }) {
       onSubmit={({ flag }) => {
         console.log({ flag })
         solve(qid, flag).then((res) => {
-          alert(res.data)
+          const message = res.data.ok ? '正解！' : 'はずれ'
+
+          alert(message)
         })
 
         console.log('sumbit on callback')
