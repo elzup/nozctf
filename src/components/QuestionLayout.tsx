@@ -1,5 +1,4 @@
 import { Typography } from '@material-ui/core'
-import { useContext } from 'react'
 import { solve } from '../service/api'
 import { Question } from '../types'
 import AnswerForm from './AnswerForm'
