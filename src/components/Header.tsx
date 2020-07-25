@@ -1,11 +1,11 @@
 import { Typography } from '@material-ui/core'
-import { LoginInfo } from '../types'
 import LoginButton from './LoginButton'
+import { useAuth } from './hooks/useAuth'
 
-type Props = {
-  login: LoginInfo
-}
-function Header({ login }: Props) {
+type Props = {}
+function Header() {
+  const { auth } = useAuth()
+
   return (
     <header>
       Score Form
