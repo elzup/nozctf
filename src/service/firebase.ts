@@ -19,23 +19,6 @@ export const init = () => {
   }
 }
 
-export const getAuth = () => {
-  init()
-
-  const provider = new firebase.auth.GoogleAuthProvider()
-  const auth = firebase.auth()
-
-  if (typeof window !== undefined) {
-    auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-  }
-
-  return {
-    auth,
-    login: () => auth.signInWithPopup(provider),
-    logout: () => auth.signOut(),
-  }
-}
-
 export const getFirestore = () => {
   init()
   return firebase.firestore()

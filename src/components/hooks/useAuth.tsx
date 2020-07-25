@@ -54,13 +54,15 @@ function useProvideAuth() {
       }
       const { uid } = fuser
       const fdb = getFirestore()
-      const user = (await fdb.collection('user').doc(uid).get()) as User
+      const userSnap = await fdb.collection('user').doc(uid).get()
 
-      if (user) {
-        setLogin({ status: 'comp', user, uid })
-      } else {
+      if (!userSnap.exists) {
         setLogin({ status: 'auth', uid })
+        return
       }
+      const user = userSnap.data() as User
+
+      setLogin({ status: 'comp', user, uid })
     })
 
     return () => unsubscribe()
@@ -68,6 +70,7 @@ function useProvideAuth() {
 
   return {
     login,
+    setLogin,
     signin,
     signout,
   }

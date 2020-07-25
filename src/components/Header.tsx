@@ -2,9 +2,8 @@ import { Typography } from '@material-ui/core'
 import LoginButton from './LoginButton'
 import { useAuth } from './hooks/useAuth'
 
-type Props = {}
 function Header() {
-  const { auth } = useAuth()
+  const { login } = useAuth()
 
   return (
     <header>

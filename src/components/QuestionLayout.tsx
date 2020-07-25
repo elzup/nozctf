@@ -3,10 +3,11 @@ import { useContext } from 'react'
 import { solve } from '../service/api'
 import { Question } from '../types'
 import AnswerForm from './AnswerForm'
-import App, { LoginContext } from './App'
+import App from './App'
+import { useAuth } from './hooks/useAuth'
 
 function AnswerFormContainer({ qid }: { qid: number }) {
-  const [login] = useContext(LoginContext)
+  const { login } = useAuth()
 
   return (
     <AnswerForm

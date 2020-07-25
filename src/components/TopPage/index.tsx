@@ -1,8 +1,8 @@
 import Link from 'next/link'
-import { useContext } from 'react'
 import { questions } from '../../questions'
 import { User } from '../../types'
-import App, { LoginContext } from '../App'
+import App from '../App'
+import { useAuth } from '../hooks/useAuth'
 
 function ListWithLogin({ user }: { user: User }) {
   console.log(user)
@@ -35,7 +35,7 @@ function List() {
 }
 
 function TopPage() {
-  const [login] = useContext(LoginContext)
+  const { login } = useAuth()
 
   if (login.status === 'comp') {
     return <ListWithLogin user={login.user} />

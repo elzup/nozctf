@@ -1,13 +1,12 @@
-import { useAuthState } from 'react-firebase-hooks/auth'
+import { Typography } from '@material-ui/core'
 import Router from 'next/router'
 import { useDocumentDataOnce } from 'react-firebase-hooks/firestore'
-import { Typography } from '@material-ui/core'
-import { getAuth, getFirestore, usableUserId } from '../../service/firebase'
-import App from '../App'
+import { getFirestore, usableUserId } from '../../service/firebase'
 import { User } from '../../types'
+import App from '../App'
+import { useAuth } from '../hooks/useAuth'
 import RegisterUserForm from './RegisterUserForm'
 
-const { auth } = getAuth()
 const fdb = getFirestore()
 
 function RegisterMain({ uid }: { uid: string }) {
@@ -41,19 +40,21 @@ function RegisterMain({ uid }: { uid: string }) {
   )
 }
 
-function RegisterPage() {
-  const [user, loading] = useAuthState(auth)
+function RegisterRedirect() {
+  const { login } = useAuth()
 
-  if (loading) return <Typography>loading</Typography>
-  if (!user) {
+  if (login.status !== 'auth') {
     Router.push('/') // NOTE: not login
     return null
   }
+  return <RegisterMain uid={login.uid} />
+}
 
+function RegisterPage() {
   return (
     <App>
       <Typography variant="h4">ユーザ登録</Typography>
-      <RegisterMain uid={user.uid} />
+      <RegisterRedirect />
     </App>
   )
 }
