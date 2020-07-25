@@ -22,7 +22,10 @@ function AnswerForm(props: Props) {
   const formik = useFormik<Fields>({
     initialValues: { flag: '' },
     onSubmit: (values, { setErrors }) => {
-      console.log('sumbit on formik')
+      if (props.disabled) {
+        alert('ログインが必要です')
+        return
+      }
 
       props.onSubmit(values, setErrors)
     },
@@ -46,7 +49,6 @@ function AnswerForm(props: Props) {
         name="flag"
         label="Flag"
         value={formik.values.flag}
-        // disabled={props.disabled}
         helperText={props.disabled && 'need login'}
         onChange={(e) => {
           formik.setFieldValue(
