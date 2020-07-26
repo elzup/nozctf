@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { Container } from '@material-ui/core'
 import { questions } from '../../questions'
 import { User } from '../../types'
 import App from '../App'
@@ -46,7 +47,9 @@ function TopPage() {
 function TopPageContainer() {
   return (
     <App>
-      <TopPage />
+      <Container>
+        <TopPage />
+      </Container>
     </App>
   )
 }

@@ -1,4 +1,4 @@
-import { Typography } from '@material-ui/core'
+import { Typography, Container } from '@material-ui/core'
 import Router from 'next/router'
 import { useDocumentDataOnce } from 'react-firebase-hooks/firestore'
 import { getFirestore, usableUserId } from '../../service/firebase'
@@ -53,8 +53,10 @@ function RegisterRedirect() {
 function RegisterPage() {
   return (
     <App>
-      <Typography variant="h4">ユーザ登録</Typography>
-      <RegisterRedirect />
+      <Container>
+        <Typography variant="h4">ユーザ登録</Typography>
+        <RegisterRedirect />
+      </Container>
     </App>
   )
 }
