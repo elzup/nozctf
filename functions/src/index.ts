@@ -1,5 +1,8 @@
 import * as admin from 'firebase-admin'
 import * as functions from 'firebase-functions'
+import 'firebase-functions/lib/logger/compat'
+
+admin.initializeApp()
 
 type SolveQuery = {
   q: number
@@ -35,6 +38,10 @@ async function solveQuery(body: SolveQuery, uid: string) {
     .collection('solve')
     .doc(user.id)
     .get()
+
+  if (!solveDoc.exists) {
+    solveDoc.ref.set({})
+  }
 
   const solves = solveDoc.data()
 
