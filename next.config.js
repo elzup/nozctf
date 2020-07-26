@@ -7,6 +7,8 @@ const webpack = require('webpack')
 require('dotenv').config()
 
 module.exports = {
+  plugins: ['styled-jsx/babel'],
+
   webpack: (config) => {
     const env = Object.keys(process.env).reduce((acc, curr) => {
       acc[`process.env.${curr}`] = JSON.stringify(process.env[curr])
