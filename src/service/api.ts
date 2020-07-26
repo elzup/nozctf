@@ -4,7 +4,7 @@ import config from '../config'
 import 'firebase/auth'
 
 const client = axios.create({
-  baseURL: 'https://asia-northeast1-scoreform.cloudfunctions.net',
+  baseURL: 'https://scoreform.web.app',
 })
 
 config.env === 'production'

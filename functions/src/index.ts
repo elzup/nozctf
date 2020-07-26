@@ -13,14 +13,14 @@ type Answer = {
   flag: string
 }
 
-export const answer = functions
-  .region('asia-northeast1')
-  .https.onCall(async (data: SolveQuery, context) => {
+export const answer = functions.https.onCall(
+  async (data: SolveQuery, context) => {
     if (!context.auth) {
       return { ok: false }
     }
     return { ok: await solveQuery(data, context.auth.uid) }
-  })
+  }
+)
 
 async function solveQuery(body: SolveQuery, uid: string) {
   const user = await admin.firestore().collection('user').doc(uid).get()
