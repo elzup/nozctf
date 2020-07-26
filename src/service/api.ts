@@ -2,7 +2,7 @@ import axios from 'axios'
 import config from '../config'
 
 const client = axios.create({
-  baseURL: 'https://scoreform.web.app',
+  baseURL: 'https://asia-northeast1-scoreform.cloudfunctions.net',
 })
 
 config.env === 'production'
