@@ -1,7 +1,7 @@
 {
-  "name": "scoreform",
+  "name": "nozctf",
   "version": "1.0.0",
-  "description": "scoreform web app",
+  "description": "nozctf web app",
   "engines": {
     "node": "10"
   },
