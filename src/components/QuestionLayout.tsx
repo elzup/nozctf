@@ -1,4 +1,4 @@
-import { Typography } from '@material-ui/core'
+import { Typography, Container } from '@material-ui/core'
 import { solve } from '../service/api'
 import { Question } from '../types'
 import AnswerForm from './AnswerForm'
@@ -31,11 +31,11 @@ type Props = {
 const QuestionLayout: React.FC<Props> = ({ q, children }) => {
   return (
     <App>
-      <Typography variant="h4">
-        {q.num}. {q.text}
-      </Typography>
-      <section>{children}</section>
-      <AnswerFormContainer qid={q.num} />
+      <Container>
+        <Typography variant="h4">{q.text}</Typography>
+        <section>{children}</section>
+        <AnswerFormContainer qid={q.num} />
+      </Container>
     </App>
   )
 }
