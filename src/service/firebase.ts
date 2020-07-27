@@ -1,6 +1,7 @@
 import * as firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
+import { useEffect, useState } from 'react'
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -23,8 +24,24 @@ export const getFirestore = () => {
   init()
   return firebase.firestore()
 }
-export const solveRef = (userId: string) => {
-  return getFirestore().collection('solve').doc(userId)
+export const solveRef = (uid: string) => {
+  return getFirestore().collection('solve').doc(uid)
+}
+
+type Solve = Record<number, firebase.firestore.Timestamp>
+
+export const useSolve = (uid: string) => {
+  const [solve, setSolve] = useState<Solve>({})
+
+  useEffect(() => {
+    solveRef(uid)
+      .get()
+      .then((snap) => {
+        if (!snap.exists) return
+        setSolve(snap.data() as Solve)
+      })
+  }, [uid])
+  return { solve } as const
 }
 
 export const usableUserId = async (userId: string) => {

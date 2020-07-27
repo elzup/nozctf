@@ -20,8 +20,10 @@ service cloud.firestore {
         allow create, update, delete: if isUserAuthenticated(userId);
       }
     }
-    match /solved {
+
+    match /solve/{path=**} {
       allow read;
+      allow create, update, delete: if false;
     }
     match /ans {
       allow read, create, update, delete: if false;

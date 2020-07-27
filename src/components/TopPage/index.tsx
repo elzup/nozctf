@@ -1,18 +1,19 @@
-import Link from 'next/link'
 import { Container } from '@material-ui/core'
+import Link from 'next/link'
 import Router from 'next/router'
 import { questions } from '../../questions'
-import { User } from '../../types'
+import { useSolve } from '../../service/firebase'
 import App from '../App'
 import { useAuth } from '../hooks/useAuth'
 
-function ListWithLogin({ user }: { user: User }) {
-  console.log(user)
+function ListWithLogin({ uid }: { uid: string }) {
+  const { solve } = useSolve(uid)
 
   return (
     <ul>
       {questions.map((q) => (
         <li key={q.num}>
+          {solve[q.num] ? 'solved!' : ''}
           <Link href={`/q/${q.num}`}>
             <a>{q.text}</a>
           </Link>
@@ -47,7 +48,7 @@ function TopPage() {
     return null
   }
   if (login.status === 'comp') {
-    return <ListWithLogin user={login.user} />
+    return <ListWithLogin uid={login.uid} />
   }
   return <List />
 }
