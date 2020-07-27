@@ -11,5 +11,5 @@ const QuestionLayout = dynamic(
 export default () => {
   const question = questions[0]
 
-  return <QuestionLayout q={question}>`FLAG_hello_nozctf`</QuestionLayout>
+  return <QuestionLayout q={question}>`FLAG_Hel0OnozCTF`</QuestionLayout>
 }
