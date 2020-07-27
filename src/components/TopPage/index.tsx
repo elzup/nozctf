@@ -1,4 +1,4 @@
-import { Container } from '@material-ui/core'
+import { Container, Paper, Typography } from '@material-ui/core'
 import Link from 'next/link'
 import Router from 'next/router'
 import { questions } from '../../questions'
@@ -56,7 +56,16 @@ function TopPage() {
 function TopPageContainer() {
   return (
     <App>
-      <Container>
+      <Container fixed maxWidth="md">
+        <Paper elevation={0} style={{ marginTop: '1rem' }}>
+          <Typography variant="h3">nozctf</Typography>
+          <Typography>
+            I will give you a question about IT. Look for flags in the
+            `FLAG_abcABC123`.
+            <br />
+            Do not attack this Website.
+          </Typography>
+        </Paper>
         <TopPage />
       </Container>
     </App>

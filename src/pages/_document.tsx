@@ -22,6 +22,7 @@ export default class MyDocument extends Document {
           <meta name="robots" content="noindex,nofollow,noarchive" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <meta name="apple-mobile-web-app-capable" content="yes" />
+          <title>nozctf</title>
         </Head>
         <body>
           <Main />

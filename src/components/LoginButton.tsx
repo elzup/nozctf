@@ -7,13 +7,13 @@ function LoginButton() {
   if (login.status === 'none') {
     return (
       <Button color="inherit" onClick={() => signin()}>
-        Google ログイン
+        Sign in with Google
       </Button>
     )
   }
   return (
     <Button color="inherit" onClick={() => signout()}>
-      ログアウト
+      Sign out
     </Button>
   )
 }
