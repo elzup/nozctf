@@ -1,1 +1,3 @@
-# Score server sample app
+# nozctf
+
+OSS web ctf app

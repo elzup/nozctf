@@ -16,7 +16,7 @@ function Header() {
             color="inherit"
             style={{ flex: 1 }}
           >
-            Score Form
+            nozctf
           </Typography>
         </Link>
         {login.status === 'comp' && <Typography>{login.user.id}</Typography>}
