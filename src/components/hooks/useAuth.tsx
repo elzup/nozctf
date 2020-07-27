@@ -25,7 +25,7 @@ export const useAuth = () => {
 }
 
 function useProvideAuth() {
-  const [login, setLogin] = useState<LoginInfo>({ status: 'none' })
+  const [login, setLogin] = useState<LoginInfo>({ status: 'loading' })
 
   const signin = () => {
     const provider = new firebase.auth.GoogleAuthProvider()

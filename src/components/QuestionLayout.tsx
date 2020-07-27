@@ -1,4 +1,5 @@
-import { Typography, Container } from '@material-ui/core'
+import { Container, Typography } from '@material-ui/core'
+import Router from 'next/router'
 import { solve } from '../service/api'
 import { Question } from '../types'
 import AnswerForm from './AnswerForm'
@@ -28,14 +29,29 @@ function AnswerFormContainer({ qid }: { qid: number }) {
 type Props = {
   q: Question
 }
-const QuestionLayout: React.FC<Props> = ({ q, children }) => {
+const RedirectQuestionLayout: React.FC<Props> = ({ q, children }) => {
+  const { login } = useAuth()
+
+  if (login.status === 'loading') {
+    return null
+  }
+  if (login.status === 'auth') {
+    Router.push('/register') // NOTE: not login
+    return null
+  }
+  return (
+    <Container>
+      <Typography variant="h4">{q.text}</Typography>
+      <section>{children}</section>
+      <AnswerFormContainer qid={q.num} />
+    </Container>
+  )
+}
+
+const QuestionLayout: React.FC<Props> = (props) => {
   return (
     <App>
-      <Container>
-        <Typography variant="h4">{q.text}</Typography>
-        <section>{children}</section>
-        <AnswerFormContainer qid={q.num} />
-      </Container>
+      <RedirectQuestionLayout {...props} />
     </App>
   )
 }

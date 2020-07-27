@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Container } from '@material-ui/core'
+import Router from 'next/router'
 import { questions } from '../../questions'
 import { User } from '../../types'
 import App from '../App'
@@ -38,6 +39,13 @@ function List() {
 function TopPage() {
   const { login } = useAuth()
 
+  if (login.status === 'loading') {
+    return null
+  }
+  if (login.status === 'auth') {
+    Router.push('/register') // NOTE: not login
+    return null
+  }
   if (login.status === 'comp') {
     return <ListWithLogin user={login.user} />
   }

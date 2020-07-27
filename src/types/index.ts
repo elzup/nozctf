@@ -18,6 +18,9 @@ export type Question = {
 
 export type LoginInfo =
   | {
+      status: 'loading'
+    }
+  | {
       status: 'none'
     }
   | {

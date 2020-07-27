@@ -43,6 +43,9 @@ function RegisterMain({ uid }: { uid: string }) {
 function RegisterRedirect() {
   const { login } = useAuth()
 
+  if (login.status === 'loading') {
+    return null
+  }
   if (login.status !== 'auth') {
     Router.push('/') // NOTE: not login
     return null
