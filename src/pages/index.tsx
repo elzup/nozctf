@@ -1,6 +1,4 @@
-import dynamic from 'next/dynamic'
-
-const TopPage = dynamic(() => import('../components/TopPage'), { ssr: false })
+import TopPage from '../components/TopPage'
 
 export default () => {
   return <TopPage />

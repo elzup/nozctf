@@ -1,14 +1,7 @@
-import dynamic from 'next/dynamic'
 import { Typography } from '@material-ui/core'
-import { questions } from '../../questions'
 import Code from '../../components/Code'
-
-const QuestionLayout = dynamic(
-  () => import('../../components/QuestionLayout'),
-  {
-    ssr: false,
-  }
-)
+import QuestionLayout from '../../components/QuestionLayout'
+import { questions } from '../../questions'
 
 export default () => {
   const question = questions[1]
