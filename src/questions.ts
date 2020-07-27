@@ -3,7 +3,7 @@ import { Question } from './types'
 export const questions: Question[] = [
   {
     num: 1,
-    text: 'Test',
+    text: 'Practice',
   },
   {
     num: 2,

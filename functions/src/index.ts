@@ -1,3 +1,4 @@
+import * as crypto from 'crypto'
 import * as admin from 'firebase-admin'
 import * as functions from 'firebase-functions'
 import 'firebase-functions/lib/logger/compat'
@@ -10,7 +11,7 @@ type SolveQuery = {
 }
 
 type Answer = {
-  flag: string
+  flagHash: string
 }
 
 export const answer = functions.https.onCall(
@@ -32,7 +33,9 @@ async function solveQuery(body: SolveQuery, uid: string) {
     .get()
   const ans = doc.data() as Answer
 
-  if (ans.flag !== body.flag) return false
+  const ansHash = crypto.createHash('md5').update(body.flag).digest('hex')
+
+  if (ans.flagHash !== ansHash) return false
   const solveDoc = await admin
     .firestore()
     .collection('solve')

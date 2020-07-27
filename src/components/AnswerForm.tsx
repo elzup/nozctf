@@ -47,7 +47,7 @@ function AnswerForm(props: Props) {
     >
       <TextField
         name="flag"
-        label="Flag"
+        label="FLAG_..."
         value={formik.values.flag}
         helperText={props.disabled && 'need login'}
         onChange={(e) => {
