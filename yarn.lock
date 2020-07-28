@@ -5180,13 +5180,6 @@ firebase@^7.16.1:
     "@firebase/storage" "0.3.39"
     "@firebase/util" "0.2.50"
 
-firestore-simple@^6.0.1:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/firestore-simple/-/firestore-simple-6.0.1.tgz#7bd19fe559d8c44d5f6d9d5ac0839fff5c680628"
-  integrity sha512-g1kmBXPSNQItSzbN6Klo0uIgyNPFr0K8mw2uC1dZG1yelzgvNqk9Fk0MY9g+8scn0PQEq7ZWPfFbRprTJfUkdg==
-  dependencies:
-    utility-types "3.10.0"
-
 flat-arguments@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/flat-arguments/-/flat-arguments-1.0.2.tgz#9baa780adf0501f282d726c9c6a038dba44ea76f"
@@ -10636,11 +10629,6 @@ util@^0.11.0:
   integrity sha512-HShAsny+zS2TZfaXxD9tYj4HQGlBezXZMZuM/S5PKLLoZkShZiGk9o5CzukI1LVHZvjdvZ2Sj1aW/Ndn2NB/HQ==
   dependencies:
     inherits "2.0.3"
-
-utility-types@3.10.0:
-  version "3.10.0"
-  resolved "https://registry.yarnpkg.com/utility-types/-/utility-types-3.10.0.tgz#ea4148f9a741015f05ed74fd615e1d20e6bed82b"
-  integrity sha512-O11mqxmi7wMKCo6HKFt5AhO4BwY3VV68YU07tgxfz8zJTIxr4BpsezN49Ffwy9j3ZpwwJp4fkRwjRzq3uWE6Rg==
 
 utils-merge@1.0.1:
   version "1.0.1"
