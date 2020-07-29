@@ -28,7 +28,7 @@ export const solveRef = (uid: string) => {
   return getFirestore().collection('solve').doc(uid)
 }
 
-type Solve = Record<number, firebase.firestore.Timestamp>
+export type Solve = Record<number, firebase.firestore.Timestamp>
 
 export const useSolve = (uid: string) => {
   const [solve, setSolve] = useState<Solve>({})

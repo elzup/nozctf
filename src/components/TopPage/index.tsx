@@ -1,39 +1,55 @@
-import { Container, Paper, Typography } from '@material-ui/core'
+import {
+  Container,
+  Paper,
+  Typography,
+  TableContainer,
+  Table,
+  TableHead,
+  TableCell,
+  TableRow,
+  TableBody,
+} from '@material-ui/core'
 import Link from 'next/link'
 import Router from 'next/router'
 import { questions } from '../../questions'
-import { useSolve } from '../../service/firebase'
+import { useSolve, Solve } from '../../service/firebase'
 import App from '../App'
 import { useAuth } from '../hooks/useAuth'
 
 function ListWithLogin({ uid }: { uid: string }) {
   const { solve } = useSolve(uid)
 
-  return (
-    <ul>
-      {questions.map((q) => (
-        <li key={q.num}>
-          {solve[q.num] ? 'solved!' : ''}
-          <Link href={`/q/${q.num}`}>
-            <a>{q.text}</a>
-          </Link>
-        </li>
-      ))}
-    </ul>
-  )
+  return <List solve={solve} />
 }
 
-function List() {
+function List({ solve }: { solve?: Solve }) {
   return (
-    <ul>
-      {questions.map((q) => (
-        <li key={q.num}>
-          <Link href={`/q/${q.num}`}>
-            <a>{q.text}</a>
-          </Link>
-        </li>
-      ))}
-    </ul>
+    <TableContainer component={Paper}>
+      <Table size="small">
+        <TableHead>
+          <TableRow>
+            {solve && <TableCell></TableCell>}
+            <TableCell>Q</TableCell>
+            <TableCell>Solvers</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {questions.map((q) => (
+            <TableRow key={q.num}>
+              {solve && <TableCell>{solve[q.num] ? 'Solved' : ''}</TableCell>}
+              <TableCell>
+                <Link href={`/q/${q.num}`}>
+                  <a>
+                    {q.num} {q.text}
+                  </a>
+                </Link>
+              </TableCell>
+              <TableCell>{1}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   )
 }
 
