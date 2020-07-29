@@ -11,6 +11,7 @@ import {
 } from '@material-ui/core'
 import Link from 'next/link'
 import Router from 'next/router'
+import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import { questions } from '../../questions'
 import { useSolve, Solve } from '../../service/firebase'
 import App from '../App'
@@ -28,7 +29,7 @@ function List({ solve }: { solve?: Solve }) {
       <Table size="small">
         <TableHead>
           <TableRow>
-            {solve && <TableCell></TableCell>}
+            {solve && <TableCell style={{ width: '1rem' }}></TableCell>}
             <TableCell>Q</TableCell>
             <TableCell>Solvers</TableCell>
           </TableRow>
@@ -36,7 +37,11 @@ function List({ solve }: { solve?: Solve }) {
         <TableBody>
           {questions.map((q) => (
             <TableRow key={q.num}>
-              {solve && <TableCell>{solve[q.num] ? 'Solved' : ''}</TableCell>}
+              {solve && (
+                <TableCell>
+                  <CheckCircleIcon color="secondary" />
+                </TableCell>
+              )}
               <TableCell>
                 <Link href={`/q/${q.num}`}>
                   <a>
