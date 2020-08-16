@@ -2,6 +2,7 @@ import * as firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
 import { useEffect, useState } from 'react'
+import { GlobalSolve } from '../types'
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -24,9 +25,7 @@ export const getFirestore = () => {
   init()
   return firebase.firestore()
 }
-export const solveRef = (uid: string) => {
-  return getFirestore().collection('solve').doc(uid)
-}
+const solveRef = () => getFirestore().collection('solve')
 
 export type Solve = Record<number, firebase.firestore.Timestamp>
 
@@ -34,7 +33,8 @@ export const useSolve = (uid: string) => {
   const [solve, setSolve] = useState<Solve>({})
 
   useEffect(() => {
-    solveRef(uid)
+    solveRef()
+      .doc(uid)
       .get()
       .then((snap) => {
         if (!snap.exists) return
@@ -42,6 +42,35 @@ export const useSolve = (uid: string) => {
       })
   }, [uid])
   return { solve } as const
+}
+
+export const useGlobalSolve = () => {
+  const [globalSolve, setGlobalSolve] = useState<GlobalSolve>({})
+
+  useEffect(() => {
+    solveRef()
+      .get()
+      .then((snap) => {
+        if (!snap.empty) return
+        const lib: GlobalSolve = {}
+
+        snap.forEach((doc) => {
+          const solves = doc.data() as Solve
+
+          Object.keys(solves)
+            .map(Number)
+            .forEach((k) => {
+              if (!lib[k]) {
+                lib[k] = { count: 0 }
+              }
+              lib[k].count += 1
+            })
+        })
+
+        setGlobalSolve(lib)
+      })
+  }, [])
+  return { globalSolve } as const
 }
 
 export const usableUserId = async (userId: string) => {

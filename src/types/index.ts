@@ -36,6 +36,11 @@ export type LoginInfo =
 export type Solve = {
   solvedAt: number
 }
+export type GlobalSolve = {
+  [quesitonId: number]: {
+    count: number
+  }
+}
 
 export type Solves = {
   [userId: string]: {

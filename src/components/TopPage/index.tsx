@@ -13,12 +13,13 @@ import Link from 'next/link'
 import Router from 'next/router'
 import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import { questions } from '../../questions'
-import { useSolve, Solve } from '../../service/firebase'
+import { useSolve, Solve, useGlobalSolve } from '../../service/firebase'
 import App from '../App'
 import { useAuth } from '../hooks/useAuth'
 
 function ListWithLogin({ uid }: { uid: string }) {
   const { solve } = useSolve(uid)
+  const { globalSolve } = useGlobalSolve()
 
   return <List solve={solve} />
 }
