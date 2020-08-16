@@ -51,7 +51,7 @@ export const useGlobalSolve = () => {
     solveRef()
       .get()
       .then((snap) => {
-        if (!snap.empty) return
+        if (snap.empty) return
         const lib: GlobalSolve = {}
 
         snap.forEach((doc) => {
