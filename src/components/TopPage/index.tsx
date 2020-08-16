@@ -16,15 +16,17 @@ import { questions } from '../../questions'
 import { useSolve, Solve, useGlobalSolve } from '../../service/firebase'
 import App from '../App'
 import { useAuth } from '../hooks/useAuth'
+import { GlobalSolve } from '../../types'
 
 function ListWithLogin({ uid }: { uid: string }) {
   const { solve } = useSolve(uid)
-  const { globalSolve } = useGlobalSolve()
 
   return <List solve={solve} />
 }
 
 function List({ solve }: { solve?: Solve }) {
+  const { globalSolve } = useGlobalSolve()
+
   return (
     <TableContainer component={Paper}>
       <Table size="small">
@@ -50,7 +52,7 @@ function List({ solve }: { solve?: Solve }) {
                   </a>
                 </Link>
               </TableCell>
-              <TableCell>{1}</TableCell>
+              <TableCell>{globalSolve?.[q.num]?.count || 0}</TableCell>
             </TableRow>
           ))}
         </TableBody>
