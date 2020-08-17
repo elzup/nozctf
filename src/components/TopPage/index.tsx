@@ -1,22 +1,21 @@
 import {
   Container,
   Paper,
-  Typography,
-  TableContainer,
   Table,
-  TableHead,
-  TableCell,
-  TableRow,
   TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
 } from '@material-ui/core'
+import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import Link from 'next/link'
 import Router from 'next/router'
-import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import { questions } from '../../questions'
-import { useSolve, Solve, useGlobalSolve } from '../../service/firebase'
+import { Solve, useGlobalSolve, useSolve } from '../../service/firebase'
 import App from '../App'
 import { useAuth } from '../hooks/useAuth'
-import { GlobalSolve } from '../../types'
 
 function ListWithLogin({ uid }: { uid: string }) {
   const { solve } = useSolve(uid)
