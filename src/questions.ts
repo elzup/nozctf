@@ -13,4 +13,8 @@ export const questions: Question[] = [
     num: 3,
     text: 'Direct Hash',
   },
+  {
+    num: 4,
+    text: 'Key By ID',
+  },
 ]

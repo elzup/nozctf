@@ -5,7 +5,10 @@
   },
   "hosting": {
     "public": "out",
-    "rewrites": [{ "source": "/answer", "function": "answer" }],
+    "rewrites": [
+      { "source": "/answer", "function": "answer" },
+      { "source": "/tryq4", "function": "tryq4" }
+    ],
     "predeploy": "yarn export",
     "cleanUrls": true
   },

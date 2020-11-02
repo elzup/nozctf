@@ -56,3 +56,34 @@ async function solveQuery(body: SolveQuery, uid: string) {
 
   return true
 }
+
+export const tryq4 = functions.https.onCall(
+  async ({ searchId }: { searchId: string }, context) => {
+    if (!context.auth) return { ok: false }
+
+    const users = [
+      { id: 'popout', deleted: true },
+      { id: 'molis', deleted: true },
+      { id: 'ben', deleted: true },
+    ]
+    const userById: Record<string, typeof users[0]> = {}
+
+    users.forEach((user) => {
+      userById[user.id] = user
+    })
+
+    function existsUser(searchId: string) {
+      if (searchId.length > 8) {
+        return false
+      }
+      const user = userById[searchId]
+
+      return user && !user.deleted
+    }
+
+    if (!existsUser(searchId)) {
+      return { ok: false, message: 'user not found' }
+    }
+    return { ok: true, message: `FLAG_${functions.config().key.q4}` }
+  }
+)
