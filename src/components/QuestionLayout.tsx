@@ -15,7 +15,7 @@ function AnswerFormContainer({ qid }: { qid: number }) {
       onSubmit={({ flag }) => {
         console.log({ flag })
         solve(qid, flag).then((res) => {
-          const message = res.data.result.ok ? '正解！' : 'はずれ'
+          const message = res.data.result.ok ? 'Configuration!!' : 'Invalid'
 
           alert(message)
         })

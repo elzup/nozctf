@@ -11,7 +11,7 @@ type Fields = {
 }
 
 const validationSchema = Yup.object<Fields>().shape({
-  searchId: Yup.string().required('入力してください'),
+  searchId: Yup.string().required('required'),
 })
 
 function SearchForm() {

@@ -15,7 +15,7 @@ export type Props = {
 }
 
 const validationSchema = Yup.object<Fields>().shape({
-  flag: Yup.string().required('入力してください'),
+  flag: Yup.string().required('required'),
 })
 
 function AnswerForm(props: Props) {
@@ -23,7 +23,7 @@ function AnswerForm(props: Props) {
     initialValues: { flag: '' },
     onSubmit: (values, { setErrors }) => {
       if (props.disabled) {
-        alert('ログインが必要です')
+        alert('Need user sign in')
         return
       }
 

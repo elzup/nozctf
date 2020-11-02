@@ -26,13 +26,13 @@ function RegisterMain({ uid }: { uid: string }) {
           const usable = await usableUserId(fields.username)
 
           if (!usable) {
-            setErorrs({ username: 'すでに使われているIDです' })
+            setErorrs({ username: 'This ID is already token.' })
             return
           }
           await fdb.collection('user').doc(uid).set({
             id: fields.username,
           })
-          alert('登録しました')
+          alert('Uuccessfully Registered')
           Router.push('/')
         }}
       />
@@ -57,7 +57,7 @@ function RegisterPage() {
   return (
     <App>
       <Container>
-        <Typography variant="h4">ユーザ登録</Typography>
+        <Typography variant="h4">User registration</Typography>
         <RegisterRedirect />
       </Container>
     </App>

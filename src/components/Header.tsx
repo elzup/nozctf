@@ -14,7 +14,7 @@ function Header() {
             className="title"
             variant="h6"
             color="inherit"
-            style={{ flex: 1 }}
+            style={{ flex: 1, cursor: 'pointer' }}
           >
             nozctf
           </Typography>

@@ -56,7 +56,7 @@ function RegisterUserForm(props: Props) {
         required
       />
       <Button type="submit" variant="outlined" color="primary">
-        ログイン
+        Sign In
       </Button>
     </form>
   )
