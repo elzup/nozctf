@@ -58,9 +58,7 @@ async function solveQuery(body: SolveQuery, uid: string) {
 }
 
 export const tryq4 = functions.https.onCall(
-  async ({ searchId }: { searchId: string }, context) => {
-    if (!context.auth) return { ok: false }
-
+  async ({ searchId }: { searchId: string }) => {
     const users = [
       { id: 'popout', deleted: true },
       { id: 'molis', deleted: true },

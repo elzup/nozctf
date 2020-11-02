@@ -7,7 +7,7 @@ const client = axios.create({
 })
 
 export async function solve(qid: number, flag: string) {
-  return client.post<{ ok: boolean }>(
+  return client.post<{ result: { ok: boolean } }>(
     '/answer',
     { data: { q: qid, flag } },
     await authOptions()
@@ -15,11 +15,9 @@ export async function solve(qid: number, flag: string) {
 }
 
 export async function tryq4(searchId: string) {
-  return client.post<{ ok: boolean; message: string }>(
-    '/tryq4',
-    { data: { searchId } },
-    await authOptions()
-  )
+  return client.post<{ ok: boolean; message: string }>('/tryq4', {
+    data: { searchId },
+  })
 }
 
 export async function authOptions() {
