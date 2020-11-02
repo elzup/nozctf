@@ -19,11 +19,11 @@ function SearchForm() {
     initialValues: { searchId: '' },
     onSubmit: ({ searchId }) => {
       if (!preTry(searchId)) {
-        alert('user not found')
+        alert('User not found')
         return
       }
       tryq4(searchId).then((res) => {
-        alert(res.data.message)
+        alert(res.data.result.message)
       })
     },
     validate: () => ({}),
@@ -95,9 +95,9 @@ function existsUser(searchId) {
 
 function searchUser(searchId) {
   if (!existsUser(searchId)) {
-    return 'user not found'
+    return 'User not found'
   }
-  return \`FLAG_???????????????\`
+  return \`User found! FLAG_???????????????\`
 }
 `.trim()}
       </Code>

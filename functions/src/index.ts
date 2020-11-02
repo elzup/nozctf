@@ -80,8 +80,11 @@ export const tryq4 = functions.https.onCall(
     }
 
     if (!existsUser(searchId)) {
-      return { ok: false, message: 'user not found' }
+      return { ok: false, message: 'User not found' }
     }
-    return { ok: true, message: `FLAG_${functions.config().key.q4}` }
+    return {
+      ok: true,
+      message: `User found! FLAG_${functions.config().key.q4}`,
+    }
   }
 )
