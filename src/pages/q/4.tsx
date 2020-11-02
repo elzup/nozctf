@@ -1,4 +1,4 @@
-import { Button, TextField } from '@material-ui/core'
+import { Button, TextField, Typography } from '@material-ui/core'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import Code from '../../components/Code'
@@ -18,51 +18,56 @@ function SearchForm() {
   const formik = useFormik<Fields>({
     initialValues: { searchId: '' },
     onSubmit: ({ searchId }) => {
-      if (!preTry(searchId)) {
-        alert('User not found')
-        return
-      }
-      tryq4(searchId).then((res) => {
-        alert(res.data.result.message)
-      })
+      if (!preTry(searchId)) return alert('User not found')
+      tryq4(searchId).then((res) => alert(res.data.result.message))
     },
     validate: () => ({}),
-
     validateOnChange: false,
     validateOnBlur: false,
     validationSchema,
   })
 
   return (
-    <form
-      onSubmit={formik.handleSubmit}
+    <div
       style={{
-        maxWidth: '400px',
-        alignItems: 'center',
-        display: 'flex',
+        border: 'solid 1px #e0e0e0',
+        padding: '20px',
+        borderRadius: '4px',
+        boxShadow: '0 2.5rem 2rem -2rem hsl(200 50% 20% / 40%)',
+        margin: '4px 0',
+        width: '600px',
       }}
     >
-      <TextField
-        name="searchId"
-        value={formik.values.searchId}
-        label="検索ID"
-        variant="outlined"
-        onChange={(e) => {
-          formik.setFieldValue(
-            'searchId',
-            e.target.value.trim().replace(/[^_0-9a-zA-Z]/g, '')
-          )
+      <form
+        onSubmit={formik.handleSubmit}
+        style={{
+          display: 'grid',
+          gridAutoFlow: 'column',
+          justifyContent: 'left',
+          columnGap: '8px',
+          alignItems: 'center',
         }}
-        type="text"
-        autoComplete="off"
-        margin="normal"
-        required
-      />
-
-      <Button type="submit" variant="contained">
-        Search
-      </Button>
-    </form>
+      >
+        <Typography>Search User</Typography>
+        <TextField
+          name="searchId"
+          value={formik.values.searchId}
+          label="user id"
+          variant="outlined"
+          onChange={(e) => {
+            formik.setFieldValue(
+              'searchId',
+              e.target.value.trim().replace(/[^_0-9a-zA-Z]/g, '')
+            )
+          }}
+          autoComplete="off"
+          required
+        />
+        <Button type="submit" variant="contained">
+          Search
+        </Button>
+      </form>
+    </div>
   )
 }
 
@@ -105,6 +110,7 @@ function searchUser(searchId) {
     </QuestionLayout>
   )
 }
+
 const users = [
   { id: 'popout', deleted: true },
   { id: 'molis', deleted: true },
@@ -117,9 +123,8 @@ users.forEach((user) => {
 })
 
 function existsUser(searchId: string) {
-  if (searchId.length > 8) {
-    return false
-  }
+  if (searchId.length > 8) return false
+
   const user = userById[searchId]
 
   return user && !user.deleted

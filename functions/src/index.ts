@@ -66,25 +66,20 @@ export const tryq4 = functions.https.onCall(
     ]
     const userById: Record<string, typeof users[0]> = {}
 
-    users.forEach((user) => {
-      userById[user.id] = user
-    })
+    users.forEach((user) => (userById[user.id] = user))
 
-    function existsUser(searchId: string) {
-      if (searchId.length > 8) {
-        return false
-      }
+    const existsUser = (searchId: string) => {
+      if (searchId.length > 8) return false
+
       const user = userById[searchId]
 
       return user && !user.deleted
     }
 
-    if (!existsUser(searchId)) {
-      return { ok: false, message: 'User not found' }
-    }
-    return {
-      ok: true,
-      message: `User found! FLAG_${functions.config().key.q4}`,
-    }
+    if (!existsUser(searchId)) return { ok: false, message: 'User not found' }
+
+    const message = `User found! FLAG_${functions.config().key.q4}`
+
+    return { ok: true, message }
   }
 )
