@@ -5,8 +5,7 @@ import React, {
   createContext,
   ReactNode,
 } from 'react'
-import * as firebase from 'firebase/app'
-import 'firebase/auth'
+import firebase from 'firebase'
 import { LoginInfo, User } from '../../types'
 import { init, getFirestore } from '../../service/firebase'
 

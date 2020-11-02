@@ -1,6 +1,5 @@
 import axios from 'axios'
-import * as firebase from 'firebase/app'
-import 'firebase/auth'
+import firebase from 'firebase'
 
 const client = axios.create({
   baseURL: 'https://nozctf.web.app',
