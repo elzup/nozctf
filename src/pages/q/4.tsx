@@ -35,7 +35,6 @@ function SearchForm() {
         borderRadius: '4px',
         boxShadow: '0 2.5rem 2rem -2rem hsl(200 50% 20% / 40%)',
         margin: '4px 0',
-        width: '600px',
       }}
     >
       <form
