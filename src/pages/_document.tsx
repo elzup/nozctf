@@ -1,29 +1,12 @@
-import React from 'react'
-import Document, { Html, Head, Main, NextScript } from 'next/document'
 import { ServerStyleSheets } from '@material-ui/core/styles'
+import Document, { Html, Main, NextScript, Head } from 'next/document'
+import React from 'react'
 
 export default class MyDocument extends Document {
   render() {
     return (
       <Html lang={'ja'}>
-        <Head>
-          <link
-            rel="icon"
-            type="image/png"
-            href="/icon-4x.png"
-            sizes="192x192"
-          />
-          <link rel="manifest" href="/manifest.json" />
-          <link rel="shortcut icon" href="/icon-1x.png" />
-          <link rel="apple-touch-icon" href="/icon-2x.png" />
-
-          <meta charSet="utf-8" />
-          <meta name="theme-color" content="#001a3c" />
-          <meta name="robots" content="noindex,nofollow,noarchive" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <meta name="apple-mobile-web-app-capable" content="yes" />
-          <title>nozctf</title>
-        </Head>
+        <Head />
         <body>
           <Main />
           <NextScript />
