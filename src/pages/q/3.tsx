@@ -2,7 +2,7 @@ import Code from '../../components/Code'
 import QuestionLayout from '../../components/QuestionLayout'
 import { questions } from '../../questions'
 
-export default () => {
+function Q() {
   const question = questions[2]
 
   return (
@@ -19,3 +19,4 @@ $ echo FLAG_$(echo $FOOD$WEATHER |md5)
     </QuestionLayout>
   )
 }
+export default Q

@@ -2,7 +2,7 @@ import { Typography } from '@material-ui/core'
 import QuestionLayout from '../../components/QuestionLayout'
 import { questions } from '../../questions'
 
-export default () => {
+function Q() {
   const question = questions[0]
 
   return (
@@ -11,3 +11,4 @@ export default () => {
     </QuestionLayout>
   )
 }
+export default Q

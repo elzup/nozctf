@@ -3,7 +3,7 @@ import Code from '../../components/Code'
 import QuestionLayout from '../../components/QuestionLayout'
 import { questions } from '../../questions'
 
-export default () => {
+function Q() {
   const question = questions[1]
 
   return (
@@ -19,3 +19,4 @@ export default () => {
     </QuestionLayout>
   )
 }
+export default Q

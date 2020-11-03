@@ -70,7 +70,7 @@ function SearchForm() {
   )
 }
 
-export default () => {
+function Q() {
   const question = questions[3]
 
   return (
@@ -132,3 +132,4 @@ function existsUser(searchId: string) {
 function preTry(searchId: string) {
   return existsUser(searchId)
 }
+export default Q
