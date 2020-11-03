@@ -50,7 +50,7 @@ const RedirectQuestionLayout: React.FC<Props> = ({ q, children }) => {
 }
 
 const QuestionLayout: React.FC<Props> = (props) => {
-  const title = `nozctf - ${props.q.text}. ${props.q.text}`
+  const title = `nozctf - ${props.q.num}. ${props.q.text}`
 
   return (
     <App>
