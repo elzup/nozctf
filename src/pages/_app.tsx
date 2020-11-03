@@ -3,6 +3,7 @@ import Head from 'next/head'
 
 import 'normalize.css'
 
+const description = 'Security CTF quiz focusing of web'
 const App = ({ Component, pageProps }: AppProps) => (
   <>
     <Head>
@@ -12,10 +13,14 @@ const App = ({ Component, pageProps }: AppProps) => (
       <link rel="apple-touch-icon" href="/icon-2x.png" />
 
       <meta charSet="utf-8" />
-      <meta name="theme-color" content="#001a3c" />
+      <meta name="theme-color" content="#000051" />
       <meta name="robots" content="noindex,nofollow,noarchive" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta name="apple-mobile-web-app-capable" content="yes" />
+      <meta property="og:title" content="nozctf" />
+      <meta property="description" content={description} />
+      <meta property="og:description" content={description} />
+      <meta name="twitter:card" content="summary" />
       <title>nozctf</title>
     </Head>
     <Component {...pageProps} />

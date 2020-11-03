@@ -1,4 +1,5 @@
 import { Container, Typography } from '@material-ui/core'
+import Head from 'next/head'
 import Router from 'next/router'
 import { solve } from '../service/api'
 import { Question } from '../types'
@@ -51,6 +52,11 @@ const RedirectQuestionLayout: React.FC<Props> = ({ q, children }) => {
 const QuestionLayout: React.FC<Props> = (props) => {
   return (
     <App>
+      <Head>
+        <title>
+          nozctf - {props.q.text}. {props.q.text}
+        </title>
+      </Head>
       <RedirectQuestionLayout {...props} />
     </App>
   )
