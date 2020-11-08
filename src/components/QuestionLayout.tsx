@@ -42,7 +42,9 @@ const RedirectQuestionLayout: React.FC<Props> = ({ q, children }) => {
   }
   return (
     <Container>
-      <Typography variant="h4">{q.text}</Typography>
+      <Typography style={{ marginTop: '20px' }} variant="h4">
+        {q.num}. {q.text}
+      </Typography>
       <section>{children}</section>
       <AnswerFormContainer qid={q.num} />
     </Container>
