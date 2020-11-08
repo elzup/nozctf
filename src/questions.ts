@@ -17,4 +17,8 @@ export const questions: Question[] = [
     num: 4,
     text: 'Key By ID',
   },
+  {
+    num: 5,
+    text: 'Sequence',
+  },
 ]
