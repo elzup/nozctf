@@ -1,11 +1,6 @@
-import * as Yup from 'yup'
 import Code from '../../components/Code'
 import QuestionLayout from '../../components/QuestionLayout'
 import { questions } from '../../questions'
-
-type Fields = {
-  searchId: string
-}
 
 function Q() {
   const question = questions[4]

@@ -1,3 +1,4 @@
+import React from 'react'
 import { Container, Typography } from '@material-ui/core'
 import Head from 'next/head'
 import Router from 'next/router'
