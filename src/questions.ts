@@ -25,4 +25,8 @@ export const questions: Question[] = [
     num: 6,
     text: 'Template String',
   },
+  {
+    num: 7,
+    text: 'Regex',
+  },
 ]

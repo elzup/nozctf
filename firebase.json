@@ -7,7 +7,8 @@
     "public": "out",
     "rewrites": [
       { "source": "/answer", "function": "answer" },
-      { "source": "/tryq4", "function": "tryq4" }
+      { "source": "/tryq4", "function": "tryq4" },
+      { "source": "/tryq7", "function": "tryq7" }
     ],
     "predeploy": "yarn export",
     "cleanUrls": true

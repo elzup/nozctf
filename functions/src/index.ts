@@ -107,8 +107,8 @@ export const tryq7 = functions.https.onCall(
       return message
     }
 
-    const res = await Promise.race([search(searchWord), timeout(3000)])
+    const res = await Promise.race([search(searchWord), timeout(500)])
 
-    return { ok: true, res }
+    return { ok: true, message: res }
   }
 )

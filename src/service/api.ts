@@ -19,6 +19,12 @@ export async function tryq4(searchId: string) {
   })
 }
 
+export async function tryq7(searchWord: string) {
+  return client.post<{ result: { ok: boolean; message: string } }>('/tryq7', {
+    data: { searchWord },
+  })
+}
+
 export async function authOptions() {
   const user = firebase.auth().currentUser
 
