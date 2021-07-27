@@ -21,4 +21,8 @@ export const questions: Question[] = [
     num: 5,
     text: 'Sequence',
   },
+  {
+    num: 6,
+    text: 'Template String',
+  },
 ]
