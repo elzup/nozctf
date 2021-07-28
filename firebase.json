@@ -8,7 +8,8 @@
     "rewrites": [
       { "source": "/answer", "function": "answer" },
       { "source": "/tryq4", "function": "tryq4" },
-      { "source": "/tryq7", "function": "tryq7" }
+      { "source": "/tryq7", "function": "app" },
+      { "source": "/tryq7_b", "function": "app" }
     ],
     "predeploy": "yarn export",
     "cleanUrls": true

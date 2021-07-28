@@ -3,6 +3,8 @@ import * as admin from 'firebase-admin'
 import * as functions from 'firebase-functions'
 import 'firebase-functions/lib/logger/compat'
 
+import { app } from './app'
+
 admin.initializeApp()
 
 type SolveQuery = {
@@ -84,31 +86,4 @@ export const tryq4 = functions.https.onCall(
   }
 )
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
-
-export const tryq7 = functions.https.onCall(
-  async ({ searchWord }: { searchWord: string }) => {
-    if (searchWord.length > 12) return { ok: false, message: 'Too long' }
-
-    const lorem = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`.replace(
-      /[,.]/g,
-      ''
-    )
-
-    const search = async (word: string) => {
-      const m = new RegExp(word).exec(lorem)
-
-      return m ? m[0] : 'no hit'
-    }
-    const timeout = async (ms: number) => {
-      await sleep(ms)
-      const message = `Timeout! FLAG_${functions.config().key.e7}`
-
-      return message
-    }
-
-    const res = await Promise.race([search(searchWord), timeout(500)])
-
-    return { ok: true, message: res }
-  }
-)
+exports.app = functions.runWith({ memory: '128MB' }).https.onRequest(app)

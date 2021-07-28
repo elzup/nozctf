@@ -41,7 +41,7 @@ function List({ solve }: { solve?: Solve }) {
             <TableRow key={q.num}>
               {solve && (
                 <TableCell>
-                  <CheckCircleIcon color="secondary" />
+                  {solve[q.num] && <CheckCircleIcon color="secondary" />}
                 </TableCell>
               )}
               <TableCell>
