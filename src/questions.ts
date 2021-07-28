@@ -21,12 +21,12 @@ export const questions: Question[] = [
     num: 5,
     text: 'Sequence',
   },
-  {
-    num: 6,
-    text: 'Template String',
-  },
-  {
-    num: 7,
-    text: 'Regex',
-  },
+  // {
+  //   num: 6,
+  //   text: 'Template String',
+  // },
+  // {
+  //   num: 7,
+  //   text: 'Regex',
+  // },
 ]
