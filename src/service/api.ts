@@ -20,9 +20,7 @@ export async function tryq4(searchId: string) {
 }
 
 export async function tryq7(searchWord: string) {
-  return client.post<{ result: { ok: boolean; message: string } }>('/tryq7', {
-    data: { searchWord },
-  })
+  return client.post<string>('/tryq7', searchWord)
 }
 
 export async function authOptions() {

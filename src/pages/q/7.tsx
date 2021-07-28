@@ -20,7 +20,7 @@ function SearchForm() {
     onSubmit: ({ searchWord }) => {
       console.log({ searchWord })
       // if (!preTry(searchWord)) return alert('User not found')
-      tryq7(searchWord).then((res) => alert(res.data.result.message))
+      tryq7(searchWord).then((res) => alert(res.data))
     },
     validate: () => ({}),
     validateOnChange: false,
@@ -38,6 +38,7 @@ function SearchForm() {
         margin: '4px 0',
       }}
     >
+      <Typography>{'X CAN YOU SEE ANYTHING Q'}</Typography>
       <form
         onSubmit={formik.handleSubmit}
         style={{
@@ -75,33 +76,18 @@ function Q() {
     <QuestionLayout q={question}>
       <Code>
         {`
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+string pattern = await reader.ReadLineAsync();
+string sentence = "X CAN YOU SEE ANYTHING Q";
 
-function tryq7(searchWord) {
-  if (searchWord.length > 12) return { ok: false, message: 'Too long' }
-
-  const lorem = \`Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\`.replace(
-    /[,.]/g,
-    ''
-  )
-
-  const search = async (word: string) => {
-    const m = new RegExp(word).exec(lorem)
-
-    return m ? m[0] : 'no hit'
+try {
+  foreach(Match match in Regex.Matches(sentence, pattern,
+    RegexOptions.None,
+    TimeSpan.FromSeconds(1))) {
+    await response.WriteAsync(match.Value);
   }
-  const timeout = async (ms: number) => {
-    await sleep(ms)
-    const message = \`Timeout! FLAG_??????????????????\`
-
-    return message
-  }
-
-  const res = await Promise.race([search(searchWord), timeout(3000)])
-
-  return { ok: true, res }
-)
-
+} catch (RegexMatchTimeoutException) {
+  await response.WriteAsync($"Found 'FLAG_{***********}'");
+}
         `.trim()}
       </Code>
       <SearchForm />
