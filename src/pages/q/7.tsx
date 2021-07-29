@@ -54,6 +54,7 @@ function SearchForm() {
           name="searchWord"
           value={formik.values.searchWord}
           label="word"
+          inputProps={{ max: 10 }}
           variant="outlined"
           onChange={(e) => {
             formik.setFieldValue('searchWord', e.target.value)
@@ -76,18 +77,23 @@ function Q() {
     <QuestionLayout q={question}>
       <Code>
         {`
-string pattern = await reader.ReadLineAsync();
-string sentence = "X CAN YOU SEE ANYTHING Q";
+  static string QTEXT = "X CAN YOU SEE ANYTHING Q";
+  public static string search(string pattern)
+  {
+    if (pattern.Length > 10) return "Error! too long";
 
-try {
-  foreach(Match match in Regex.Matches(sentence, pattern,
-    RegexOptions.None,
-    TimeSpan.FromSeconds(1))) {
-    await response.WriteAsync(match.Value);
+    try {
+      Match m = Regex.Match(QTEXT, pattern, RegexOptions.None, TimeSpan.FromSeconds(1));
+      if (m.Success) {
+        return $"Find! {m.Value}";
+      } else {
+        return "No Hit";
+      }
+    }
+    catch (RegexMatchTimeoutException) {
+      return $"TIMEOUT! 'FLAG_*********'";
+    }
   }
-} catch (RegexMatchTimeoutException) {
-  await response.WriteAsync($"Found 'FLAG_{***********}'");
-}
         `.trim()}
       </Code>
       <SearchForm />
