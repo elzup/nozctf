@@ -94,6 +94,9 @@ public static string search(string pattern)
   catch (RegexMatchTimeoutException) {
     return $"TIMEOUT! 'FLAG_*********'";
   }
+  catch (ArgumentException) {
+    return $"Invalid regex";
+  }
 }
         `.trim()}
       </Code>
