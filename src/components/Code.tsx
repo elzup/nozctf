@@ -2,7 +2,10 @@ import React from 'react'
 import { Theme } from '@material-ui/core'
 import { useTheme } from '@material-ui/styles'
 
-const Code: React.FC = (props) => {
+type Props = {
+  lang?: string
+}
+const Code: React.FC<Props> = ({ children, lang }) => {
   const theme = useTheme<Theme>()
 
   return (
@@ -15,7 +18,7 @@ const Code: React.FC = (props) => {
         borderRadius: '2px',
       }}
     >
-      <code>{props.children}</code>
+      <code className={lang ? `${lang}` : ''}>{children}</code>
     </pre>
   )
 }

@@ -75,25 +75,26 @@ function Q() {
 
   return (
     <QuestionLayout q={question}>
-      <Code>
+      <Code lang="csharp">
         {`
-  static string QTEXT = "X CAN YOU SEE ANYTHING Q";
-  public static string search(string pattern)
-  {
-    if (pattern.Length > 10) return "Error! too long";
+// C#
+static string QTEXT = "X CAN YOU SEE ANYTHING Q";
+public static string search(string pattern)
+{
+  if (pattern.Length > 10) return "Error! too long";
 
-    try {
-      Match m = Regex.Match(QTEXT, pattern, RegexOptions.None, TimeSpan.FromSeconds(1));
-      if (m.Success) {
-        return $"Find! {m.Value}";
-      } else {
-        return "No Hit";
-      }
-    }
-    catch (RegexMatchTimeoutException) {
-      return $"TIMEOUT! 'FLAG_*********'";
+  try {
+    Match m = Regex.Match(QTEXT, pattern, RegexOptions.None, TimeSpan.FromSeconds(1));
+    if (m.Success) {
+      return $"Find! {m.Value}";
+    } else {
+      return "No Hit";
     }
   }
+  catch (RegexMatchTimeoutException) {
+    return $"TIMEOUT! 'FLAG_*********'";
+  }
+}
         `.trim()}
       </Code>
       <SearchForm />
