@@ -30,11 +30,12 @@ function SearchForm() {
   return (
     <TryFormBox>
       <form onSubmit={handleSubmit}>
-        <Typography>Post Word</Typography>
+        <Typography>six(</Typography>
         <TextField
           name="word"
           value={values.word}
-          label="word"
+          size="small"
+          label="ssssssQ"
           inputProps={{ maxLength: 8 }}
           variant="outlined"
           helperText={errors.word}
@@ -43,6 +44,7 @@ function SearchForm() {
           autoComplete="off"
           required
         />
+        <Typography>)</Typography>
         <Button type="submit" variant="contained">
           Submit
         </Button>

@@ -64,7 +64,7 @@ function TopPage() {
   const { login } = useAuth()
 
   if (login.status === 'loading') {
-    return null
+    return 'loading...'
   }
   if (login.status === 'auth') {
     Router.push('/register') // NOTE: not login
