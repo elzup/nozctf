@@ -92,7 +92,7 @@ export const tryq6 = functions.https.onCall(
   }
 )
 
-const FLAG_Q6 = `FLAG_${functions.config().key.q4}`
+const FLAG_Q6 = `FLAG_${functions.config().key.q6}`
 
 function six(ssssssQ: string) {
   if (typeof ssssssQ !== 'string') return 'invalid: no string'
