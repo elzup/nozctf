@@ -37,7 +37,7 @@ function RegisterUserForm(props: Props) {
     >
       <TextField
         name="username"
-        label="ユーザID"
+        label="User ID"
         value={formik.values.username}
         helperText={formik.touched.username ? formik.errors.username : ''}
         error={!!formik.errors.username}
@@ -55,7 +55,7 @@ function RegisterUserForm(props: Props) {
         margin="normal"
         required
       />
-      <Button type="submit" variant="outlined" color="primary">
+      <Button type="submit" variant="contained" color="primary">
         Sign In
       </Button>
     </form>

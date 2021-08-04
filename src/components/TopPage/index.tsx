@@ -1,4 +1,5 @@
 import {
+  Box,
   CircularProgress,
   Container,
   Paper,
@@ -81,7 +82,7 @@ function TopPageContainer() {
   return (
     <App>
       <Container fixed maxWidth="md">
-        <Paper elevation={0} style={{ marginTop: '1rem' }}>
+        <Box marginTop="1rem">
           <Typography variant="h3">nozctf</Typography>
           <Typography>
             I will give you a question about IT. Look for flags in the
@@ -89,8 +90,10 @@ function TopPageContainer() {
             <br />
             Do not attack this Website.
           </Typography>
-        </Paper>
-        <TopPage />
+        </Box>
+        <Box marginTop="1rem">
+          <TopPage />
+        </Box>
       </Container>
     </App>
   )

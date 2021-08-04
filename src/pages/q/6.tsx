@@ -46,7 +46,7 @@ function SearchForm() {
         />
         <Typography>)</Typography>
         <Button type="submit" variant="contained">
-          Submit
+          {'⏎'}
         </Button>
       </form>
     </TryFormBox>

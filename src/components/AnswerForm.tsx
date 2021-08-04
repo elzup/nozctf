@@ -64,7 +64,7 @@ function AnswerForm(props: Props) {
 
       <Button
         type="submit"
-        variant="outlined"
+        variant="contained"
         color="primary"
         // disabled={props.disabled}
       >
