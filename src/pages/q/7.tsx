@@ -2,6 +2,7 @@ import { Button, TextField, Typography } from '@material-ui/core'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import Code from '../../components/Code'
+import { TryFormBox } from '../../components/commons'
 import QuestionLayout from '../../components/QuestionLayout'
 import { questions } from '../../questions'
 import { tryq7 } from '../../service/api'
@@ -29,26 +30,9 @@ function SearchForm() {
   })
 
   return (
-    <div
-      style={{
-        border: 'solid 1px #e0e0e0',
-        padding: '20px',
-        borderRadius: '4px',
-        boxShadow: '0 2.5rem 2rem -2rem hsl(200 50% 20% / 40%)',
-        margin: '4px 0',
-      }}
-    >
+    <TryFormBox>
       <Typography>{'X CAN YOU SEE ANYTHING Q'}</Typography>
-      <form
-        onSubmit={formik.handleSubmit}
-        style={{
-          display: 'grid',
-          gridAutoFlow: 'column',
-          justifyContent: 'left',
-          columnGap: '8px',
-          alignItems: 'center',
-        }}
-      >
+      <form onSubmit={formik.handleSubmit}>
         <Typography>Search Word</Typography>
         <TextField
           name="searchWord"
@@ -66,7 +50,7 @@ function SearchForm() {
           Search
         </Button>
       </form>
-    </div>
+    </TryFormBox>
   )
 }
 
