@@ -86,4 +86,19 @@ export const tryq4 = functions.https.onCall(
   }
 )
 
+export const tryq6 = functions.https.onCall(
+  async ({ word }: { word: string }) => {
+    return { ok: true, message: six(word) }
+  }
+)
+
+const FLAG_Q6 = `FLAG_${functions.config().key.q4}`
+
+function six(ssssssQ: string) {
+  if (typeof ssssssQ !== 'string') return 'invalid: no string'
+  if ([...ssssssQ].length > 6) return 'invalid: too long'
+  if (ssssssQ[6] !== 'Q') return 'invalid'
+  return FLAG_Q6
+}
+
 exports.app = functions.runWith({ memory: '128MB' }).https.onRequest(app)

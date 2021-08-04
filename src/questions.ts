@@ -23,7 +23,7 @@ export const questions: Question[] = [
   },
   {
     num: 6,
-    text: 'Template String',
+    text: 'Length Gate',
   },
   {
     num: 7,
