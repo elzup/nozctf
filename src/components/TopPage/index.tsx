@@ -1,4 +1,5 @@
 import {
+  CircularProgress,
   Container,
   Paper,
   Table,
@@ -64,7 +65,7 @@ function TopPage() {
   const { login } = useAuth()
 
   if (login.status === 'loading') {
-    return 'loading...'
+    return <CircularProgress />
   }
   if (login.status === 'auth') {
     Router.push('/register') // NOTE: not login
