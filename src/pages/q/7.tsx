@@ -12,11 +12,11 @@ type Fields = {
 }
 
 const validationSchema = Yup.object<Fields>().shape({
-  searchWord: Yup.string().required('required'),
+  searchWord: Yup.string().max(10).required('required'),
 })
 
 function SearchForm() {
-  const formik = useFormik<Fields>({
+  const { values, handleSubmit, handleChange } = useFormik<Fields>({
     initialValues: { searchWord: '' },
     onSubmit: ({ searchWord }) => {
       console.log({ searchWord })
@@ -32,17 +32,15 @@ function SearchForm() {
   return (
     <TryFormBox>
       <Typography>{'X CAN YOU SEE ANYTHING Q'}</Typography>
-      <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <Typography>Search Word</Typography>
         <TextField
           name="searchWord"
-          value={formik.values.searchWord}
+          value={values.searchWord}
           label="word"
-          inputProps={{ max: 10 }}
+          inputProps={{ maxLength: 10 }}
           variant="outlined"
-          onChange={(e) => {
-            formik.setFieldValue('searchWord', e.target.value)
-          }}
+          onChange={handleChange}
           autoComplete="off"
           required
         />

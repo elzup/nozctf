@@ -16,7 +16,7 @@ const validationSchema = Yup.object<Fields>().shape({
 })
 
 function SearchForm() {
-  const formik = useFormik<Fields>({
+  const { values, setFieldValue, handleSubmit } = useFormik<Fields>({
     initialValues: { searchId: '' },
     onSubmit: ({ searchId }) => {
       if (!preTry(searchId)) return alert('User not found')
@@ -30,15 +30,15 @@ function SearchForm() {
 
   return (
     <TryFormBox>
-      <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <Typography>Search User</Typography>
         <TextField
           name="searchId"
-          value={formik.values.searchId}
+          value={values.searchId}
           label="user id"
           variant="outlined"
           onChange={(e) => {
-            formik.setFieldValue(
+            setFieldValue(
               'searchId',
               e.target.value.trim().replace(/[^_0-9a-zA-Z]/g, '')
             )
