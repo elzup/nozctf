@@ -59,7 +59,7 @@ function Q() {
 
   return (
     <QuestionLayout q={question}>
-      <Code>
+      <Code lang="js">
         {`
 const users = [
   { id: 'popout', deleted: true },

@@ -7,7 +7,7 @@ function Q() {
 
   return (
     <QuestionLayout q={question}>
-      <Code>
+      <Code lang="js">
         {`
 const nums = anonymousNumbers()
 

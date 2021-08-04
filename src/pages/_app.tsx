@@ -34,8 +34,6 @@ const App = ({ Component, pageProps }: AppProps) => (
         rel="stylesheet"
         href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/styles/default.min.css"
       />
-      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/highlight.min.js"></script>
-      <script>hljs.highlightAll()</script>
       <title>nozctf</title>
     </Head>
     <Component {...pageProps} />

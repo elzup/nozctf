@@ -1,11 +1,12 @@
 import React from 'react'
 import { Theme } from '@material-ui/core'
 import { useTheme } from '@material-ui/styles'
+import Highlight from 'react-highlight.js'
 
 type Props = {
   lang?: string
 }
-const Code: React.FC<Props> = ({ children, lang }) => {
+const Code: React.FC<Props> = ({ children, lang = '' }) => {
   const theme = useTheme<Theme>()
 
   return (
@@ -18,7 +19,7 @@ const Code: React.FC<Props> = ({ children, lang }) => {
         borderRadius: '2px',
       }}
     >
-      <code className={lang ? `${lang}` : ''}>{children}</code>
+      <Highlight language={lang}>{children}</Highlight>
     </pre>
   )
 }

@@ -7,7 +7,7 @@ function Q() {
 
   return (
     <QuestionLayout q={question}>
-      <Code>
+      <Code lang="shell">
         {`
 $ echo -n $FOOD | shasum -a 256
 b493d48364afe44d11c0165cf470a4164d1e2609911ef998be868d46ade3de4e  -
