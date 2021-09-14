@@ -47,3 +47,12 @@ export type Solves = {
     [qid: string]: Solve
   }
 }
+
+export const PROVIDER_TYPE_GOOGLE = 'google'
+export const PROVIDER_TYPE_TWITTER = 'twitter'
+export const PROVIDER_TYPES = [
+  PROVIDER_TYPE_GOOGLE,
+  PROVIDER_TYPE_TWITTER,
+] as const
+
+export type ProviderType = typeof PROVIDER_TYPES[number]

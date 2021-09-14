@@ -1,7 +1,8 @@
 import firebase from 'firebase/app'
+import 'firebase/auth'
 import 'firebase/firestore'
 import { useEffect, useState } from 'react'
-import { GlobalSolve } from '../types'
+import { GlobalSolve, ProviderType } from '../types'
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -18,6 +19,11 @@ export const init = () => {
   if (firebase.apps.length === 0) {
     firebase.initializeApp(firebaseConfig)
   }
+}
+
+export const getAuth = () => {
+  init()
+  return firebase.auth()
 }
 
 export const getFirestore = () => {
@@ -77,4 +83,27 @@ export const usableUserId = async (userId: string) => {
   const docs = await fdb.collection('user').where('id', '==', userId).get()
 
   return docs.size === 0
+}
+
+export const getProvider = (providerType: ProviderType) => {
+  switch (providerType) {
+    case 'google':
+      return new firebase.auth.GoogleAuthProvider()
+    case 'twitter':
+      return new firebase.auth.TwitterAuthProvider()
+  }
+}
+
+export const signin = (providerType: ProviderType) => {
+  const provider = getProvider(providerType)
+  const auth = firebase.auth()
+
+  if (typeof window !== undefined) {
+    auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+  }
+  auth.signInWithPopup(provider)
+}
+
+export const signout = () => {
+  return firebase.auth().signOut()
 }

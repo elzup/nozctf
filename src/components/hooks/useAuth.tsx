@@ -1,17 +1,12 @@
 import React, {
-  useState,
-  useEffect,
-  useContext,
   createContext,
   ReactNode,
+  useContext,
+  useEffect,
+  useState,
 } from 'react'
-import firebase from 'firebase/app'
-import 'firebase/auth'
-import 'firebase/firestore'
+import { getAuth, getFirestore, signout } from '../../service/firebase'
 import { LoginInfo, User } from '../../types'
-import { init, getFirestore } from '../../service/firebase'
-
-init()
 
 const authContext = createContext({} as ReturnType<typeof useProvideAuth>)
 
@@ -28,27 +23,8 @@ export const useAuth = () => {
 function useProvideAuth() {
   const [login, setLogin] = useState<LoginInfo>({ status: 'loading' })
 
-  const signin = () => {
-    const provider = new firebase.auth.GoogleAuthProvider()
-    const auth = firebase.auth()
-
-    if (typeof window !== undefined) {
-      auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-    }
-    auth.signInWithPopup(provider)
-  }
-
-  const signout = () => {
-    return firebase
-      .auth()
-      .signOut()
-      .then(() => {
-        setLogin({ status: 'none' })
-      })
-  }
-
   useEffect(() => {
-    const unsubscribe = firebase.auth().onAuthStateChanged(async (fuser) => {
+    const unsubscribe = getAuth().onAuthStateChanged(async (fuser) => {
       if (!fuser) {
         setLogin({ status: 'none' })
         return
@@ -72,7 +48,6 @@ function useProvideAuth() {
   return {
     login,
     setLogin,
-    signin,
-    signout,
+    signout: () => signout().then(() => setLogin({ status: 'none' })),
   }
 }
