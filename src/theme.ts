@@ -1,9 +1,9 @@
-import { createMuiTheme } from '@material-ui/core/styles'
+import { createTheme } from '@material-ui/core'
 import { indigo, lightBlue } from '@material-ui/core/colors'
 import { createGlobalStyle } from 'styled-components'
 
 export const makeTheme = (isDark: boolean) =>
-  createMuiTheme({
+  createTheme({
     palette: {
       type: isDark ? 'dark' : 'light',
       primary: {
