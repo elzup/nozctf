@@ -2,7 +2,6 @@ import * as crypto from 'crypto'
 import * as admin from 'firebase-admin'
 import * as functions from 'firebase-functions'
 import 'firebase-functions/lib/logger/compat'
-
 import { app } from './app'
 
 admin.initializeApp()
@@ -102,3 +101,23 @@ function six(ssssssQ: string) {
 }
 
 exports.app = functions.runWith({ memory: '128MB' }).https.onRequest(app)
+
+const FLAG_Q8 = `FLAG_${functions.config().key.q8}`
+
+export const tryq8 = functions.https.onCall(async ({ n }: { n: number }) => {
+  return { ok: true, message: eight(n) }
+})
+
+// @ts-ignore
+const isInteger = (n: number) => n <= parseInt(n)
+
+function eight(n: number) {
+  if (typeof n !== 'number') return 'invalid: no number'
+  if (/* double check !!!! */ !!!Number.isInteger(n)) {
+    if (/* double check !!!!!!! */ isInteger(n)) {
+      return FLAG_Q8
+    }
+  }
+
+  return 'invalid'
+}
