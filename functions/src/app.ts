@@ -1,10 +1,10 @@
-import express, { NextFunction, Request, Response } from 'express'
+import express, { NextFunction, Request, Response, json } from 'express'
 
 const app = express()
 // eslint-disable-next-line new-cap
 const router = express.Router()
 
-app.use(express.json())
+app.use(json)
 app.use('/', router)
 
 app.use((req: Request, res: Response, next: NextFunction) => {
