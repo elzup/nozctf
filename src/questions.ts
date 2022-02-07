@@ -31,6 +31,6 @@ export const questions: Question[] = [
   },
   {
     num: 8,
-    text: 'TODO',
+    text: 'Non Integer',
   },
 ]

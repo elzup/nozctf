@@ -119,5 +119,5 @@ function eight(n: number) {
     }
   }
 
-  return 'invalid'
+  return 'non integer'
 }
