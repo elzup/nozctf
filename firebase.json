@@ -9,7 +9,8 @@
       { "source": "/answer", "function": "answer" },
       { "source": "/tryq4", "function": "tryq4" },
       { "source": "/tryq6", "function": "tryq6" },
-      { "source": "/tryq7", "function": "tryq7" }
+      { "source": "/tryq7", "function": "tryq7" },
+      { "source": "/tryq8", "function": "tryq8" }
     ],
     "predeploy": "yarn export",
     "cleanUrls": true
