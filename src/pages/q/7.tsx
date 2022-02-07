@@ -11,7 +11,7 @@ type Fields = {
   searchWord: string
 }
 
-const validationSchema = Yup.object<Fields>().shape({
+const validationSchema = Yup.object().shape({
   searchWord: Yup.string().max(10).required('required'),
 })
 

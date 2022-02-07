@@ -11,7 +11,7 @@ type Fields = {
   n: number
 }
 
-const validationSchema = Yup.object<Fields>().shape({
+const validationSchema = Yup.object().shape({
   n: Yup.number().required('required'),
 })
 

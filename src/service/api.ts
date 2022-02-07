@@ -25,7 +25,7 @@ export const tryq7 = (searchWord: string) =>
   client.post<string>('/tryq7', searchWord)
 
 export const tryq8 = (n: number) =>
-  client.post<string>('/tryq8', { data: { n } })
+  client.post<MessageReesponse>('/tryq8', { data: { n } })
 
 export async function authOptions() {
   const user = firebase.auth().currentUser

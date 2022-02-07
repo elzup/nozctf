@@ -11,7 +11,7 @@ type Fields = {
   word: string
 }
 
-const validationSchema = Yup.object<Fields>().shape({
+const validationSchema = Yup.object().shape({
   word: Yup.string().max(7).required('required'),
 })
 

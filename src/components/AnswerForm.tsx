@@ -14,7 +14,7 @@ export type Props = {
   ) => void
 }
 
-const validationSchema = Yup.object<Fields>().shape({
+const validationSchema = Yup.object().shape({
   flag: Yup.string().required('required'),
 })
 
