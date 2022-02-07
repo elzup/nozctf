@@ -20,7 +20,7 @@ function SearchForm() {
     initialValues: { n: 0 },
     onSubmit: ({ n }) => {
       console.log({ n })
-      tryq8(n).then((res) => alert(res.data))
+      tryq8(n).then((res) => alert(res.data.result.message))
     },
     validate: () => ({}),
     validateOnChange: false,
