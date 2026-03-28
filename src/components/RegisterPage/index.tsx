@@ -26,13 +26,13 @@ function RegisterMain({ uid }: { uid: string }) {
           const usable = await usableUserId(fields.username)
 
           if (!usable) {
-            setErorrs({ username: 'This ID is already token.' })
+            setErorrs({ username: 'This ID is already taken.' })
             return
           }
           await fdb.collection('user').doc(uid).set({
             id: fields.username,
           })
-          alert('Uuccessfully Registered')
+          alert('Successfully Registered')
           Router.push('/')
         }}
       />

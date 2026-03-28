@@ -20,6 +20,17 @@ export const answer = functions.https.onCall(
     if (!context.auth) {
       return { ok: false }
     }
+    if (
+      typeof data?.q !== 'number' ||
+      !Number.isInteger(data.q) ||
+      data.q < 1 ||
+      data.q > 8
+    ) {
+      return { ok: false }
+    }
+    if (typeof data?.flag !== 'string' || data.flag.length > 100) {
+      return { ok: false }
+    }
     return { ok: await solveQuery(data, context.auth.uid) }
   }
 )
@@ -32,6 +43,8 @@ async function solveQuery(body: SolveQuery, uid: string) {
     .collection('ans')
     .doc(String(body.q))
     .get()
+
+  if (!doc.exists) return false
   const ans = doc.data() as Answer
 
   const ansHash = crypto.createHash('md5').update(body.flag).digest('hex')
@@ -59,7 +72,10 @@ async function solveQuery(body: SolveQuery, uid: string) {
 }
 
 export const tryq4 = functions.https.onCall(
-  async ({ searchId }: { searchId: string }) => {
+  async ({ searchId }: { searchId: string }, context) => {
+    if (typeof searchId !== 'string' || searchId.length > 100) {
+      return { ok: false, message: 'invalid input' }
+    }
     const users = [
       { id: 'popout', deleted: true },
       { id: 'molis', deleted: true },
@@ -87,6 +103,9 @@ export const tryq4 = functions.https.onCall(
 
 export const tryq6 = functions.https.onCall(
   async ({ word }: { word: string }) => {
+    if (typeof word !== 'string' || word.length > 100) {
+      return { ok: false, message: 'invalid input' }
+    }
     return { ok: true, message: six(word) }
   }
 )
@@ -105,6 +124,9 @@ exports.app = functions.runWith({ memory: '128MB' }).https.onRequest(app)
 const FLAG_Q8 = `FLAG_${functions.config().key.q8}`
 
 export const tryq8 = functions.https.onCall(async ({ n }: { n: number }) => {
+  if (typeof n !== 'number' || !isFinite(n)) {
+    return { ok: false, message: 'invalid input' }
+  }
   return { ok: true, message: eight(n) }
 })
 

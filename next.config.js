@@ -6,12 +6,23 @@ const webpack = require('webpack')
 
 require('dotenv').config()
 
+const FIREBASE_ENV_KEYS = [
+  'FIREBASE_API_KEY',
+  'FIREBASE_AUTH_DOMAIN',
+  'FIREBASE_DATABASE_URL',
+  'FIREBASE_PROJECT_ID',
+  'FIREBASE_STORAGE_BUCKET',
+  'FIREBASE_MESSAGING_SENDER_ID',
+  'FIREBASE_APP_ID',
+  'FIREBASE_MEASUREMENT_ID',
+]
+
 module.exports = {
   plugins: ['styled-jsx/babel'],
 
   webpack: (config) => {
-    const env = Object.keys(process.env).reduce((acc, curr) => {
-      acc[`process.env.${curr}`] = JSON.stringify(process.env[curr])
+    const env = FIREBASE_ENV_KEYS.reduce((acc, key) => {
+      acc[`process.env.${key}`] = JSON.stringify(process.env[key])
       return acc
     }, {})
 

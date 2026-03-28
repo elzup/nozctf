@@ -14,18 +14,18 @@ export async function solve(qid: number, flag: string) {
   )
 }
 
-type MessageReesponse = { result: { ok: boolean; message: string } }
+type MessageResponse = { result: { ok: boolean; message: string } }
 export const tryq4 = (searchId: string) =>
-  client.post<MessageReesponse>('/tryq4', { data: { searchId } })
+  client.post<MessageResponse>('/tryq4', { data: { searchId } })
 
 export const tryq6 = (word: string) =>
-  client.post<MessageReesponse>('/tryq6', { data: { word } })
+  client.post<MessageResponse>('/tryq6', { data: { word } })
 
 export const tryq7 = (searchWord: string) =>
   client.post<string>('/tryq7', searchWord)
 
 export const tryq8 = (n: number) =>
-  client.post<MessageReesponse>('/tryq8', { data: { n } })
+  client.post<MessageResponse>('/tryq8', { data: { n } })
 
 export async function authOptions() {
   const user = firebase.auth().currentUser

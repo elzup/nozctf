@@ -16,14 +16,11 @@ function AnswerFormContainer({ qid }: { qid: number }) {
     <AnswerForm
       disabled={login.status !== 'comp'}
       onSubmit={({ flag }) => {
-        console.log({ flag })
         solve(qid, flag).then((res) => {
-          const message = res.data.result.ok ? 'Configuration!!' : 'Invalid'
+          const message = res.data.result.ok ? 'Congratulations!!' : 'Invalid'
 
           alert(message)
         })
-
-        console.log('sumbit on callback')
       }}
     />
   )
@@ -32,7 +29,7 @@ function AnswerFormContainer({ qid }: { qid: number }) {
 type Props = {
   q: Question
 }
-const RedirectQuestionLayout: React.FC<Props> = ({ q, children }) => {
+const RedirectQuestionLayout = ({ q, children }: React.PropsWithChildren<Props>) => {
   const { login } = useAuth()
 
   if (login.status === 'loading') {
@@ -53,7 +50,7 @@ const RedirectQuestionLayout: React.FC<Props> = ({ q, children }) => {
   )
 }
 
-const QuestionLayout: React.FC<Props> = (props) => {
+const QuestionLayout = (props: React.PropsWithChildren<Props>) => {
   const title = `nozctf - ${props.q.num}. ${props.q.text}`
 
   return (
