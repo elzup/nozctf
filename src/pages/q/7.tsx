@@ -19,8 +19,6 @@ function SearchForm() {
   const { values, handleSubmit, handleChange } = useFormik<Fields>({
     initialValues: { searchWord: '' },
     onSubmit: ({ searchWord }) => {
-      console.log({ searchWord })
-      // if (!preTry(searchWord)) return alert('User not found')
       tryq7(searchWord).then((res) => alert(res.data))
     },
     validate: () => ({}),

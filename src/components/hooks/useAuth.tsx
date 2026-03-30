@@ -5,6 +5,8 @@ import React, {
   useEffect,
   useState,
 } from 'react'
+import { onAuthStateChanged } from 'firebase/auth'
+import { doc, getDoc } from 'firebase/firestore'
 import { getAuth, getFirestore, signout } from '../../service/firebase'
 import { LoginInfo, User } from '../../types'
 
@@ -24,16 +26,16 @@ function useProvideAuth() {
   const [login, setLogin] = useState<LoginInfo>({ status: 'loading' })
 
   useEffect(() => {
-    const unsubscribe = getAuth().onAuthStateChanged(async (fuser) => {
+    const unsubscribe = onAuthStateChanged(getAuth(), async (fuser) => {
       if (!fuser) {
         setLogin({ status: 'none' })
         return
       }
       const { uid } = fuser
-      const fdb = getFirestore()
-      const userSnap = await fdb.collection('user').doc(uid).get()
+      const db = getFirestore()
+      const userSnap = await getDoc(doc(db, 'user', uid))
 
-      if (!userSnap.exists) {
+      if (!userSnap.exists()) {
         setLogin({ status: 'auth', uid })
         return
       }

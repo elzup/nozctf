@@ -1,8 +1,27 @@
-import firebase from 'firebase/app'
-import 'firebase/auth'
-import 'firebase/firestore'
 import { useEffect, useState } from 'react'
-import { GlobalSolve, ProviderType } from '../types'
+import { initializeApp, getApps, getApp } from 'firebase/app'
+import {
+  getAuth as _getAuth,
+  GoogleAuthProvider,
+  TwitterAuthProvider,
+  signInWithPopup,
+  signOut,
+  browserLocalPersistence,
+  setPersistence,
+} from 'firebase/auth'
+import {
+  getFirestore as _getFirestore,
+  collection,
+  doc,
+  getDocs,
+  query,
+  where,
+  getDoc,
+  getDocs as getDocsFirestore,
+  Timestamp,
+} from 'firebase/firestore'
+import { getFunctions as _getFunctions } from 'firebase/functions'
+import { GlobalSolve } from '../types'
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -12,98 +31,100 @@ const firebaseConfig = {
   storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.FIREBASE_APP_ID,
-  measumentId: process.env.FIREBASE_MEASUREMENT_ID,
+  measurementId: process.env.FIREBASE_MEASUREMENT_ID,
 }
 
-export const init = () => {
-  if (firebase.apps.length === 0) {
-    firebase.initializeApp(firebaseConfig)
+function getFirebaseApp() {
+  if (getApps().length === 0) {
+    return initializeApp(firebaseConfig)
   }
+  return getApp()
 }
 
-export const getAuth = () => {
-  init()
-  return firebase.auth()
+export function getAuth() {
+  return _getAuth(getFirebaseApp())
 }
 
-export const getFirestore = () => {
-  init()
-  return firebase.firestore()
+export function getFirestore() {
+  return _getFirestore(getFirebaseApp())
 }
-const solveRef = () => getFirestore().collection('solve')
 
-export type Solve = Record<number, firebase.firestore.Timestamp>
+export function getFunctions() {
+  return _getFunctions(getFirebaseApp())
+}
 
-export const useSolve = (uid: string) => {
+export type Solve = Record<number, Timestamp>
+
+export function useSolve(uid: string) {
   const [solve, setSolve] = useState<Solve>({})
 
   useEffect(() => {
-    solveRef()
-      .doc(uid)
-      .get()
-      .then((snap) => {
-        if (!snap.exists) return
-        setSolve(snap.data() as Solve)
-      })
+    const db = getFirestore()
+
+    getDoc(doc(db, 'solve', uid)).then((snap) => {
+      if (!snap.exists()) return
+      setSolve(snap.data() as Solve)
+    })
   }, [uid])
   return { solve } as const
 }
 
-export const useGlobalSolve = () => {
+export function useGlobalSolve() {
   const [globalSolve, setGlobalSolve] = useState<GlobalSolve>({})
 
   useEffect(() => {
-    solveRef()
-      .get()
-      .then((snap) => {
-        if (snap.empty) return
-        const lib: GlobalSolve = {}
+    const db = getFirestore()
 
-        snap.forEach((doc) => {
-          const solves = doc.data() as Solve
+    getDocsFirestore(collection(db, 'solve')).then((snap) => {
+      if (snap.empty) return
+      const lib: GlobalSolve = {}
 
-          Object.keys(solves)
-            .map(Number)
-            .forEach((k) => {
-              if (!lib[k]) {
-                lib[k] = { count: 0 }
-              }
-              lib[k].count += 1
-            })
-        })
+      snap.forEach((d) => {
+        const solves = d.data() as Solve
 
-        setGlobalSolve(lib)
+        Object.keys(solves)
+          .map(Number)
+          .forEach((k) => {
+            if (!lib[k]) {
+              lib[k] = { count: 0 }
+            }
+            lib[k].count += 1
+          })
       })
+
+      setGlobalSolve(lib)
+    })
   }, [])
   return { globalSolve } as const
 }
 
-export const usableUserId = async (userId: string) => {
-  const fdb = getFirestore()
-  const docs = await fdb.collection('user').where('id', '==', userId).get()
+export type ProviderType = 'google' | 'twitter'
 
-  return docs.size === 0
+export async function usableUserId(id: string): Promise<boolean> {
+  const db = getFirestore()
+  const q = query(collection(db, 'user'), where('id', '==', id))
+  const snapshot = await getDocs(q)
+
+  return snapshot.empty
 }
 
-export const getProvider = (providerType: ProviderType) => {
-  switch (providerType) {
+function getProvider(type: ProviderType) {
+  switch (type) {
     case 'google':
-      return new firebase.auth.GoogleAuthProvider()
+      return new GoogleAuthProvider()
     case 'twitter':
-      return new firebase.auth.TwitterAuthProvider()
+      return new TwitterAuthProvider()
   }
 }
 
-export const signin = (providerType: ProviderType) => {
-  const provider = getProvider(providerType)
-  const auth = firebase.auth()
+export async function signin(type: ProviderType) {
+  const provider = getProvider(type)
+  const auth = getAuth()
 
-  if (typeof window !== undefined) {
-    auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-  }
-  auth.signInWithPopup(provider)
+  await setPersistence(auth, browserLocalPersistence)
+  return signInWithPopup(auth, provider)
 }
 
-export const signout = () => {
-  return firebase.auth().signOut()
+export function signout() {
+  return signOut(getAuth())
 }

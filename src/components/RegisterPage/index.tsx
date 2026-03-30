@@ -1,22 +1,29 @@
 import { Typography, Container } from '@material-ui/core'
 import Router from 'next/router'
-import { useDocumentDataOnce } from 'react-firebase-hooks/firestore'
+import { useEffect, useState } from 'react'
+import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { getFirestore, usableUserId } from '../../service/firebase'
 import { User } from '../../types'
 import App from '../App'
 import { useAuth } from '../hooks/useAuth'
 import RegisterUserForm from './RegisterUserForm'
 
-const fdb = getFirestore()
-
 function RegisterMain({ uid }: { uid: string }) {
-  const [doc, loading] = useDocumentDataOnce<User | undefined>(
-    fdb.collection('user').doc(uid)
-  )
+  const [isLoading, setIsLoading] = useState(true)
+  const [isRegistered, setIsRegistered] = useState(false)
 
-  if (loading) return <Typography>loading</Typography>
-  if (!!doc) {
-    Router.push('/') // NOTE: alraedy registered
+  useEffect(() => {
+    const db = getFirestore()
+
+    getDoc(doc(db, 'user', uid)).then((snap) => {
+      setIsRegistered(snap.exists())
+      setIsLoading(false)
+    })
+  }, [uid])
+
+  if (isLoading) return <Typography>loading</Typography>
+  if (isRegistered) {
+    Router.push('/')
     return null
   }
   return (
@@ -29,7 +36,9 @@ function RegisterMain({ uid }: { uid: string }) {
             setErorrs({ username: 'This ID is already taken.' })
             return
           }
-          await fdb.collection('user').doc(uid).set({
+          const db = getFirestore()
+
+          await setDoc(doc(db, 'user', uid), {
             id: fields.username,
           })
           alert('Successfully Registered')
@@ -47,7 +56,7 @@ function RegisterRedirect() {
     return null
   }
   if (login.status !== 'auth') {
-    Router.push('/') // NOTE: not login
+    Router.push('/')
     return null
   }
   return <RegisterMain uid={login.uid} />

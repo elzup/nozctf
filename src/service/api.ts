@@ -1,37 +1,60 @@
 import axios from 'axios'
-import firebase from 'firebase/app'
-import 'firebase/auth'
+import { httpsCallable } from 'firebase/functions'
+import { getFunctions, getAuth } from './firebase'
 
-const client = axios.create({
-  baseURL: 'https://nozctf.web.app',
-})
+const API_BASE = 'https://nozctf.web.app'
 
-export async function solve(qid: number, flag: string) {
-  return client.post<{ result: { ok: boolean } }>(
-    '/answer',
-    { data: { q: qid, flag } },
-    await authOptions()
-  )
+type MessageResponse = { ok: boolean; message: string }
+
+export async function solve(q: number, flag: string) {
+  const answerFn = httpsCallable<
+    { q: number; flag: string },
+    { ok: boolean }
+  >(getFunctions(), 'answer')
+
+  return answerFn({ q, flag })
 }
 
-type MessageResponse = { result: { ok: boolean; message: string } }
-export const tryq4 = (searchId: string) =>
-  client.post<MessageResponse>('/tryq4', { data: { searchId } })
+export async function tryq4(searchId: string) {
+  const fn = httpsCallable<{ searchId: string }, MessageResponse>(
+    getFunctions(),
+    'tryq4'
+  )
 
-export const tryq6 = (word: string) =>
-  client.post<MessageResponse>('/tryq6', { data: { word } })
+  return fn({ searchId })
+}
 
-export const tryq7 = (searchWord: string) =>
-  client.post<string>('/tryq7', searchWord)
+export async function tryq6(word: string) {
+  const fn = httpsCallable<{ word: string }, MessageResponse>(
+    getFunctions(),
+    'tryq6'
+  )
 
-export const tryq8 = (n: number) =>
-  client.post<MessageResponse>('/tryq8', { data: { n } })
+  return fn({ word })
+}
 
-export async function authOptions() {
-  const user = firebase.auth().currentUser
+export async function tryq8(n: number) {
+  const fn = httpsCallable<{ n: number }, MessageResponse>(
+    getFunctions(),
+    'tryq8'
+  )
 
-  if (!user) throw new Error('not login user')
-  const token = await user.getIdToken()
+  return fn({ n })
+}
 
-  return { headers: { authorization: `Bearer ${token}` } }
+export async function tryq7(searchWord: string) {
+  return axios.post<string>(`${API_BASE}/tryq7`, { searchWord })
+}
+
+export async function preTry(searchWord: string) {
+  const user = getAuth().currentUser
+
+  if (!user) return false
+  const idToken = await user.getIdToken()
+
+  return axios.post(
+    `${API_BASE}/try`,
+    { searchWord },
+    { headers: { Authorization: `Bearer ${idToken}` } }
+  )
 }

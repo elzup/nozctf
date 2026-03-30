@@ -19,7 +19,7 @@ function SearchForm() {
   const { handleSubmit, values, errors, handleChange } = useFormik<Fields>({
     initialValues: { word: '' },
     onSubmit: ({ word }) => {
-      tryq6(word).then((res) => alert(res.data.result.message))
+      tryq6(word).then((res) => alert(res.data.message))
     },
     validate: () => ({}),
     validateOnChange: false,

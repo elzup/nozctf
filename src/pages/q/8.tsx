@@ -19,8 +19,7 @@ function SearchForm() {
   const { values, handleSubmit, handleChange } = useFormik<Fields>({
     initialValues: { n: 0 },
     onSubmit: ({ n }) => {
-      console.log({ n })
-      tryq8(n).then((res) => alert(res.data.result.message))
+      tryq8(n).then((res) => alert(res.data.message))
     },
     validate: () => ({}),
     validateOnChange: false,

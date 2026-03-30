@@ -48,9 +48,7 @@ function List({ solve }: { solve?: Solve }) {
               )}
               <TableCell>
                 <Link href={`/q/${q.num}`}>
-                  <a>
-                    {q.num} {q.text}
-                  </a>
+                  {q.num} {q.text}
                 </Link>
               </TableCell>
               <TableCell>{globalSolve?.[q.num]?.count || 0}</TableCell>

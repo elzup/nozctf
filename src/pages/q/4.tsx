@@ -20,7 +20,7 @@ function SearchForm() {
     initialValues: { searchId: '' },
     onSubmit: ({ searchId }) => {
       if (!preTry(searchId)) return alert('User not found')
-      tryq4(searchId).then((res) => alert(res.data.result.message))
+      tryq4(searchId).then((res) => alert(res.data.message))
     },
     validate: () => ({}),
     validateOnChange: false,

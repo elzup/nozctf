@@ -17,7 +17,7 @@ function AnswerFormContainer({ qid }: { qid: number }) {
       disabled={login.status !== 'comp'}
       onSubmit={({ flag }) => {
         solve(qid, flag).then((res) => {
-          const message = res.data.result.ok ? 'Congratulations!!' : 'Invalid'
+          const message = res.data.ok ? 'Congratulations!!' : 'Invalid'
 
           alert(message)
         })
