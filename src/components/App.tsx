@@ -5,7 +5,7 @@ import { GlobalStyle, makeTheme } from '../theme'
 import Header from './Header'
 import { ProvideAuth } from './hooks/useAuth'
 
-const App: React.FC = ({ children }) => {
+const App = ({ children }: React.PropsWithChildren) => {
   const isDark = useMediaQuery('(prefers-color-scheme: dark)')
 
   const theme = React.useMemo(() => makeTheme(isDark), [isDark])

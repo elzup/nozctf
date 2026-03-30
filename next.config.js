@@ -18,7 +18,7 @@ const FIREBASE_ENV_KEYS = [
 ]
 
 module.exports = {
-  plugins: ['styled-jsx/babel'],
+  output: 'export',
 
   webpack: (config) => {
     const env = FIREBASE_ENV_KEYS.reduce((acc, key) => {

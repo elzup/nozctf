@@ -6,7 +6,7 @@ import Highlight from 'react-highlight.js'
 type Props = {
   lang?: string
 }
-const Code: React.FC<Props> = ({ children, lang = '' }) => {
+const Code = ({ children, lang = '' }: React.PropsWithChildren<Props>) => {
   const theme = useTheme<Theme>()
 
   return (
