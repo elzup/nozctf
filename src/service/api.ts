@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { httpsCallable } from 'firebase/functions'
 import { getFunctions, getAuth } from './firebase'
 
@@ -43,7 +42,16 @@ export async function tryq8(n: number) {
 }
 
 export async function tryq7(searchWord: string) {
-  return axios.post<string>(`${API_BASE}/tryq7`, { searchWord })
+  const response = await fetch(`${API_BASE}/tryq7`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ searchWord }),
+  })
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`)
+  }
+  return { data: await response.text() }
 }
 
 export async function preTry(searchWord: string) {
@@ -52,9 +60,17 @@ export async function preTry(searchWord: string) {
   if (!user) return false
   const idToken = await user.getIdToken()
 
-  return axios.post(
-    `${API_BASE}/try`,
-    { searchWord },
-    { headers: { Authorization: `Bearer ${idToken}` } }
-  )
+  const response = await fetch(`${API_BASE}/try`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${idToken}`,
+    },
+    body: JSON.stringify({ searchWord }),
+  })
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`)
+  }
+  return { data: await response.json() }
 }
