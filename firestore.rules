@@ -21,7 +21,10 @@ service cloud.firestore {
 
       match /img/{imgId} {
         allow read: if isAuthenticated();
-        allow create, update, delete: if isUserAuthenticated(uid);
+        allow create, update: if isUserAuthenticated(uid)
+          && request.resource.data.keys().hasOnly(['url', 'name', 'createdAt'])
+          && request.resource.size < 10 * 1024;
+        allow delete: if isUserAuthenticated(uid);
       }
     }
 

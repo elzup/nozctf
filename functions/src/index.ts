@@ -38,6 +38,8 @@ export const answer = functions.https.onCall(
 async function solveQuery(body: SolveQuery, uid: string) {
   const user = await admin.firestore().collection('user').doc(uid).get()
 
+  if (!user.exists) return false
+
   const doc = await admin
     .firestore()
     .collection('ans')
