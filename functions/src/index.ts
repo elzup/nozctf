@@ -1,6 +1,7 @@
 import * as crypto from 'crypto'
-import * as admin from 'firebase-admin'
-import * as functions from 'firebase-functions'
+import { initializeApp } from 'firebase-admin/app'
+import { getFirestore } from 'firebase-admin/firestore'
+import * as functions from 'firebase-functions/v1'
 import 'firebase-functions/logger/compat'
 import { defineString } from 'firebase-functions/params'
 import { checkPin, eight, existsUser, six } from './challenges'
@@ -18,7 +19,7 @@ import {
   MAX_PIN_LENGTH,
 } from './validate'
 
-admin.initializeApp()
+initializeApp()
 
 const KEY_Q4 = defineString('KEY_Q4')
 const KEY_Q6 = defineString('KEY_Q6')
@@ -39,12 +40,9 @@ async function checkRateLimit(
   uid: string,
   rule: RateLimitRule
 ): Promise<boolean> {
-  const ref = admin
-    .firestore()
-    .collection('ratelimit')
-    .doc(`${rule.scope}_${uid}`)
+  const ref = getFirestore().collection('ratelimit').doc(`${rule.scope}_${uid}`)
 
-  return admin.firestore().runTransaction(async (tx) => {
+  return getFirestore().runTransaction(async (tx) => {
     const doc = await tx.get(ref)
     const timestamps = nextTimestamps(
       doc.data()?.timestamps ?? [],
@@ -86,7 +84,7 @@ function isSameHash(a: string, b: string) {
 }
 
 async function solveQuery(body: SolveQuery, uid: string) {
-  const db = admin.firestore()
+  const db = getFirestore()
   const user = await db.collection('user').doc(uid).get()
 
   if (!user.exists) return false

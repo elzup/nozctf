@@ -6,7 +6,8 @@
 //   node scripts/backfill-userid.mts --project nozctf           # dry run
 //   node scripts/backfill-userid.mts --project nozctf --apply
 import { parseArgs } from 'node:util'
-import admin from 'firebase-admin'
+import { initializeApp } from 'firebase-admin/app'
+import { getFirestore } from 'firebase-admin/firestore'
 
 // gRPC status of `create()` on an existing document
 const ALREADY_EXISTS = 6
@@ -24,8 +25,8 @@ if (!values.project) {
   throw new Error('--project <projectId> is required')
 }
 
-admin.initializeApp({ projectId: values.project })
-const db = admin.firestore()
+initializeApp({ projectId: values.project })
+const db = getFirestore()
 
 const snap = await db.collection('user').get()
 const users: LegacyUser[] = snap.docs
