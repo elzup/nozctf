@@ -1,0 +1,7 @@
+out
+.next
+public
+functions/lib
+yarn.lock
+package-lock.json
+.firebase
