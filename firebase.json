@@ -10,13 +10,18 @@
       { "source": "/tryq4", "function": "tryq4" },
       { "source": "/tryq6", "function": "tryq6" },
       { "source": "/tryq7", "function": "tryq7" },
-      { "source": "/tryq8", "function": "tryq8" }
+      { "source": "/tryq8", "function": "tryq8" },
+      { "source": "/tryq9", "function": "tryq9" }
     ],
-    "predeploy": "yarn export",
+    "predeploy": "yarn build",
     "cleanUrls": true
   },
   "emulators": {
-    "firestore": { "host": "localhost", "port": "4000" }
+    "auth": { "port": 9099 },
+    "functions": { "port": 5001 },
+    "firestore": { "port": 8080 },
+    "ui": { "enabled": false },
+    "singleProjectMode": true
   },
   "firestore": {
     "rules": "firestore.rules",

@@ -4,7 +4,12 @@ dist/
 .firebase/
 
 .env
-.env.*### https://raw.github.com/github/gitignore/766e2a1f6276219fed1f18f11508261adbcb8257/Node.gitignore
+.env.*
+!.env.example
+# test-only values for the emulator project (see e2e/)
+!.env.demo-nozctf
+
+### https://raw.github.com/github/gitignore/766e2a1f6276219fed1f18f11508261adbcb8257/Node.gitignore
 
 # Logs
 logs
