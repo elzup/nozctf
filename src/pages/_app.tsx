@@ -4,7 +4,7 @@ import config from '../config'
 
 import 'normalize.css'
 
-const description = 'Security CTF quiz focusing of web'
+const description = 'Security CTF quiz focusing on web'
 const App = ({ Component, pageProps }: AppProps) => (
   <>
     <Head>
@@ -20,7 +20,7 @@ const App = ({ Component, pageProps }: AppProps) => (
 
       <meta
         httpEquiv="Content-Security-Policy"
-        content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://*.firebaseio.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://nozctf.web.app; frame-src https://accounts.google.com https://*.firebaseapp.com;"
+        content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://*.firebaseio.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.cloudfunctions.net https://nozctf.web.app; frame-src https://accounts.google.com https://*.firebaseapp.com;"
       />
       <meta charSet="utf-8" />
       <meta name="theme-color" content="#000051" />
@@ -30,7 +30,7 @@ const App = ({ Component, pageProps }: AppProps) => (
       <meta property="og:title" content="nozctf" />
       <meta property="og:type" content="website" />
       <meta property="og:image" content={config.ogIconUrl} />
-      <meta property="description" content={description} />
+      <meta name="description" content={description} />
       <meta property="og:description" content={description} />
       <meta name="twitter:card" content="summary" />
       <meta name="twitter:image" content={config.ogIconUrl} />

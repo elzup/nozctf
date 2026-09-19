@@ -6,6 +6,7 @@ import { TryFormBox } from '../../components/commons'
 import QuestionLayout from '../../components/QuestionLayout'
 import { questions } from '../../questions'
 import { tryq6 } from '../../service/api'
+import { alertError } from '../../utils'
 
 type Fields = {
   word: string
@@ -19,7 +20,9 @@ function SearchForm() {
   const { handleSubmit, values, errors, handleChange } = useFormik<Fields>({
     initialValues: { word: '' },
     onSubmit: ({ word }) => {
-      tryq6(word).then((res) => alert(res.data.message))
+      tryq6(word)
+        .then((res) => alert(res.data.message))
+        .catch(alertError)
     },
     validate: () => ({}),
     validateOnChange: false,

@@ -6,6 +6,7 @@ import { TryFormBox } from '../../components/commons'
 import QuestionLayout from '../../components/QuestionLayout'
 import { questions } from '../../questions'
 import { tryq4 } from '../../service/api'
+import { alertError } from '../../utils'
 
 type Fields = {
   searchId: string
@@ -20,7 +21,9 @@ function SearchForm() {
     initialValues: { searchId: '' },
     onSubmit: ({ searchId }) => {
       if (!preTry(searchId)) return alert('User not found')
-      tryq4(searchId).then((res) => alert(res.data.message))
+      tryq4(searchId)
+        .then((res) => alert(res.data.message))
+        .catch(alertError)
     },
     validate: () => ({}),
     validateOnChange: false,
@@ -99,7 +102,7 @@ const users = [
   { id: 'molis', deleted: true },
   { id: 'ben', deleted: true },
 ]
-const userById: Record<string, typeof users[0]> = {}
+const userById: Record<string, (typeof users)[0]> = {}
 
 users.forEach((user) => {
   userById[user.id] = user

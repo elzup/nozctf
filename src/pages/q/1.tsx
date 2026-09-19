@@ -7,7 +7,7 @@ function Q() {
 
   return (
     <QuestionLayout q={question}>
-      <Typography>Weolcome to nozctf. flag is `FLAG_Hel0OnozCTF`.</Typography>
+      <Typography>Welcome to nozctf. flag is `FLAG_Hel0OnozCTF`.</Typography>
     </QuestionLayout>
   )
 }
