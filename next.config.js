@@ -1,7 +1,3 @@
-const webpack = require('webpack')
-
-require('dotenv').config()
-
 const FIREBASE_ENV_KEYS = [
   'FIREBASE_API_KEY',
   'FIREBASE_AUTH_DOMAIN',
@@ -14,19 +10,14 @@ const FIREBASE_ENV_KEYS = [
   'FIREBASE_USE_EMULATOR',
 ]
 
+// next loads `.env` before this file. `env` only accepts strings, so unset keys are left out
+const env = Object.fromEntries(
+  FIREBASE_ENV_KEYS.filter((key) => process.env[key] !== undefined).map(
+    (key) => [key, process.env[key]]
+  )
+)
+
 module.exports = {
   output: 'export',
-  // lint runs with oxlint (`yarn lint`), not with next's eslint integration
-  eslint: { ignoreDuringBuilds: true },
-
-  webpack: (config) => {
-    const env = FIREBASE_ENV_KEYS.reduce((acc, key) => {
-      acc[`process.env.${key}`] = JSON.stringify(process.env[key])
-      return acc
-    }, {})
-
-    config.plugins.push(new webpack.DefinePlugin(env))
-
-    return config
-  },
+  env,
 }

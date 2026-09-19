@@ -39,7 +39,7 @@ yarn dev
 | `yarn typecheck` | tsc for the web app and functions                                     |
 | `yarn test`      | unit tests (vitest): `src/**/*.test.ts`, `functions/src/**/*.test.ts` |
 | `yarn verify`    | all of the above                                                      |
-| `yarn test:e2e`  | `e2e/` against the Firebase emulators (needs Java)                    |
+| `yarn test:e2e`  | `e2e/` against the Firebase emulators (needs JDK 21+)                 |
 
 `yarn test:e2e` starts the auth / functions / firestore emulators as the project `demo-nozctf`,
 so it never touches the real project. It covers `firestore.rules` and the callable functions
