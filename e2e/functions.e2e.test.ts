@@ -9,8 +9,9 @@ const Q9_PIN = '4271'
 const FLAGS = { q9: 'FLAG_e2eq9' } as const
 
 const Q1_FLAG = 'FLAG_e2eanswer'
-// Same as ANSWER_RATE.limit in functions/src/ratelimit.ts
+// Same as ANSWER_RATE.limit / TRY_RATE.limit in functions/src/ratelimit.ts
 const ANSWER_LIMIT = 20
+const TRY_LIMIT = 30
 // A matching digit costs 300ms on the server. Half of it still separates it from jitter
 const DIGIT_DELAY_THRESHOLD_MS = 150
 
@@ -126,20 +127,49 @@ describe('answer', () => {
 // NOTE: this repository is public. Keep the intended solutions out of the tests.
 describe('tryq4 / tryq6 / tryq8', () => {
   it('does not leak a flag for ordinary input', async () => {
-    expect(await guest.call('tryq4', { searchId: 'ben' })).toEqual({
+    const client = await newClient()
+
+    expect(await client.call('tryq4', { searchId: 'ben' })).toEqual({
       ok: false,
       message: 'User not found',
     })
-    expect((await guest.call('tryq6', { word: 'abcdef' })).message).toBe(
+    expect((await client.call('tryq6', { word: 'abcdef' })).message).toBe(
       'invalid'
     )
-    expect((await guest.call('tryq8', { n: 1.5 })).message).toBe('non integer')
-    expect((await guest.call('tryq8', { n: -1.5 })).message).toBe(
+    expect((await client.call('tryq8', { n: 1.5 })).message).toBe('non integer')
+    expect((await client.call('tryq8', { n: -1.5 })).message).toBe(
       'invalid: negative'
     )
-    expect((await guest.call('tryq8', { n: 1 })).message).toBe(
+    expect((await client.call('tryq8', { n: 1 })).message).toBe(
       'invalid: integer'
     )
+  })
+
+  it.each([
+    ['tryq4', { searchId: 'ben' }],
+    ['tryq6', { word: 'abcdef' }],
+    ['tryq8', { n: 1.5 }],
+  ])('%s rejects guests', async (fn, data) => {
+    expect(await guest.call(fn, data)).toEqual({
+      ok: false,
+      message: 'unauthorized',
+    })
+  })
+
+  it('shares one rate limit across tryq4 / tryq6 / tryq8', async () => {
+    const client = await newClient()
+    const calls = [
+      () => client.call('tryq4', { searchId: 'ben' }),
+      () => client.call('tryq6', { word: 'abcdef' }),
+      () => client.call('tryq8', { n: 1.5 }),
+    ]
+
+    for (let i = 0; i < TRY_LIMIT; i++) {
+      expect((await calls[i % calls.length]()).message).not.toBe(
+        'too many requests'
+      )
+    }
+    expect((await calls[0]()).message).toBe('too many requests')
   })
 
   it.each([
@@ -153,7 +183,9 @@ describe('tryq4 / tryq6 / tryq8', () => {
   ])(
     '%s answers "invalid input" to %j instead of crashing',
     async (fn, data) => {
-      expect(await guest.call(fn, data)).toEqual({
+      const client = await newClient()
+
+      expect(await client.call(fn, data)).toEqual({
         ok: false,
         message: 'invalid input',
       })

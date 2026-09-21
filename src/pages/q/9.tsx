@@ -5,6 +5,7 @@ import * as Yup from 'yup'
 import Code from '../../components/Code'
 import { TryFormBox } from '../../components/commons'
 import QuestionLayout from '../../components/QuestionLayout'
+import { SIGN_IN_TO_TRY, useCanTry } from '../../components/hooks/useAuth'
 import { questions } from '../../questions'
 import { tryq9 } from '../../service/api'
 
@@ -17,6 +18,7 @@ const validationSchema = Yup.object().shape({
 })
 
 function SearchForm() {
+  const canTry = useCanTry()
   const [elapsed, setElapsed] = useState<number | null>(null)
   const [message, setMessage] = useState<string>('')
 
@@ -58,10 +60,15 @@ function SearchForm() {
           autoComplete="off"
           required
         />
-        <Button type="submit" variant="contained" disabled={isSubmitting}>
+        <Button
+          type="submit"
+          variant="contained"
+          disabled={!canTry || isSubmitting}
+        >
           Try
         </Button>
       </form>
+      {!canTry && <Typography>{SIGN_IN_TO_TRY}</Typography>}
       {elapsed !== null && (
         <Typography variant="h6" style={{ marginTop: 16 }}>
           {`Response time: ${elapsed}ms`}

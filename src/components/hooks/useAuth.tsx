@@ -22,6 +22,11 @@ export const useAuth = () => {
   return useContext(authContext)
 }
 
+// The try functions only answer signed-in, registered users
+export const useCanTry = () => useAuth().login.status === 'comp'
+
+export const SIGN_IN_TO_TRY = 'sign in to try'
+
 function useProvideAuth() {
   const [login, setLogin] = useState<LoginInfo>({ status: 'loading' })
 

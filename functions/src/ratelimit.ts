@@ -11,6 +11,13 @@ export const ANSWER_RATE: RateLimitRule = {
   windowMs: 60 * 1000,
 }
 
+// Q4/6/8 are solved by reasoning, not by volume; this only stops scripted hammering
+export const TRY_RATE: RateLimitRule = {
+  scope: 'try',
+  limit: 30,
+  windowMs: 60 * 1000,
+}
+
 // Enough for the intended per-digit approach to Q9, too few to enumerate every PIN
 export const Q9_RATE: RateLimitRule = {
   scope: 'q9',

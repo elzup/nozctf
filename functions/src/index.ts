@@ -10,6 +10,7 @@ import {
   nextTimestamps,
   Q9_RATE,
   RateLimitRule,
+  TRY_RATE,
 } from './ratelimit'
 import {
   isShortString,
@@ -55,6 +56,20 @@ async function checkRateLimit(
     tx.set(ref, { timestamps })
     return true
   })
+}
+
+type Denied = { ok: false; message: string }
+
+// Every try function needs a signed-in user so the rate limit has a key
+async function denyReason(
+  context: functions.https.CallableContext,
+  rule: RateLimitRule
+): Promise<Denied | null> {
+  if (!context.auth) return { ok: false, message: 'unauthorized' }
+  if (!(await checkRateLimit(context.auth.uid, rule))) {
+    return { ok: false, message: 'too many requests' }
+  }
+  return null
 }
 
 export const answer = functions.https.onCall(
@@ -114,12 +129,15 @@ async function solveQuery(body: SolveQuery, uid: string) {
 }
 
 export const tryq4 = functions.https.onCall(
-  async (data: { searchId?: unknown } | null) => {
+  async (data: { searchId?: unknown } | null, context) => {
     const searchId = data?.searchId
 
     if (!isShortString(searchId, MAX_INPUT_LENGTH)) {
       return { ok: false, message: 'invalid input' }
     }
+    const denied = await denyReason(context, TRY_RATE)
+
+    if (denied) return denied
     if (!existsUser(searchId)) return { ok: false, message: 'User not found' }
 
     return { ok: true, message: `User found! FLAG_${KEY_Q4.value()}` }
@@ -127,23 +145,29 @@ export const tryq4 = functions.https.onCall(
 )
 
 export const tryq6 = functions.https.onCall(
-  async (data: { word?: unknown } | null) => {
+  async (data: { word?: unknown } | null, context) => {
     const word = data?.word
 
     if (!isShortString(word, MAX_INPUT_LENGTH)) {
       return { ok: false, message: 'invalid input' }
     }
+    const denied = await denyReason(context, TRY_RATE)
+
+    if (denied) return denied
     return { ok: true, message: six(word, `FLAG_${KEY_Q6.value()}`) }
   }
 )
 
 export const tryq8 = functions.https.onCall(
-  async (data: { n?: unknown } | null) => {
+  async (data: { n?: unknown } | null, context) => {
     const n = data?.n
 
     if (typeof n !== 'number' || !isFinite(n)) {
       return { ok: false, message: 'invalid input' }
     }
+    const denied = await denyReason(context, TRY_RATE)
+
+    if (denied) return denied
     return { ok: true, message: eight(n, `FLAG_${KEY_Q8.value()}`) }
   }
 )
@@ -152,17 +176,14 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 export const tryq9 = functions.https.onCall(
   async (data: { pin?: unknown } | null, context) => {
-    if (!context.auth) {
-      return { ok: false, message: 'unauthorized' }
-    }
     const pin = data?.pin
 
     if (!isShortString(pin, MAX_PIN_LENGTH)) {
       return { ok: false, message: 'invalid input' }
     }
-    if (!(await checkRateLimit(context.auth.uid, Q9_RATE))) {
-      return { ok: false, message: 'too many requests' }
-    }
+    const denied = await denyReason(context, Q9_RATE)
+
+    if (denied) return denied
     if (!(await checkPin(pin, KEY_Q9PIN.value(), sleep))) {
       return { ok: false, message: 'wrong pin' }
     }
