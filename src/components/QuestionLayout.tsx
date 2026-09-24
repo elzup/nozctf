@@ -1,5 +1,4 @@
 import { Container, Typography } from '@material-ui/core'
-import 'highlight.js/styles/mono-blue.css'
 import Head from 'next/head'
 import Router from 'next/router'
 import React, { useEffect } from 'react'

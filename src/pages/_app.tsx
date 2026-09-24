@@ -20,7 +20,7 @@ const App = ({ Component, pageProps }: AppProps) => (
 
       <meta
         httpEquiv="Content-Security-Policy"
-        content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://*.firebaseio.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.cloudfunctions.net https://nozctf.web.app; frame-src https://accounts.google.com https://*.firebaseapp.com;"
+        content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://*.firebaseio.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.cloudfunctions.net https://nozctf.web.app; frame-src https://accounts.google.com https://*.firebaseapp.com;"
       />
       <meta charSet="utf-8" />
       <meta name="theme-color" content="#000051" />
@@ -34,10 +34,6 @@ const App = ({ Component, pageProps }: AppProps) => (
       <meta property="og:description" content={description} />
       <meta name="twitter:card" content="summary" />
       <meta name="twitter:image" content={config.ogIconUrl} />
-      <link
-        rel="stylesheet"
-        href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/styles/default.min.css"
-      />
       <title>nozctf</title>
     </Head>
     <Component {...pageProps} />
