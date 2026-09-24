@@ -2,15 +2,6 @@ export type User = {
   id: string
 }
 
-export type Action = {
-  name: string
-}
-
-export type Commit = {
-  text: string
-  timestamp: number
-}
-
 export type Question = {
   num: number
   text: string
@@ -33,19 +24,9 @@ export type LoginInfo =
       user: User
     }
 
-export type Solve = {
-  solvedAt: number
-}
+/** Solver count per question, as stored in stats/solvers */
 export type GlobalSolve = {
-  [quesitonId: number]: {
-    count: number
-  }
-}
-
-export type Solves = {
-  [userId: string]: {
-    [qid: string]: Solve
-  }
+  [questionNum: number]: number
 }
 
 export const PROVIDER_TYPE_GOOGLE = 'google'
@@ -55,4 +36,4 @@ export const PROVIDER_TYPES = [
   PROVIDER_TYPE_TWITTER,
 ] as const
 
-export type ProviderType = typeof PROVIDER_TYPES[number]
+export type ProviderType = (typeof PROVIDER_TYPES)[number]

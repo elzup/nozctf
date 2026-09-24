@@ -8,6 +8,7 @@ import {
   signOut,
   browserLocalPersistence,
   setPersistence,
+  connectAuthEmulator,
 } from 'firebase/auth'
 import {
   getFirestore as _getFirestore,
@@ -17,11 +18,16 @@ import {
   query,
   where,
   getDoc,
-  getDocs as getDocsFirestore,
+  limit,
+  writeBatch,
+  connectFirestoreEmulator,
   Timestamp,
 } from 'firebase/firestore'
-import { getFunctions as _getFunctions } from 'firebase/functions'
-import { GlobalSolve } from '../types'
+import {
+  getFunctions as _getFunctions,
+  connectFunctionsEmulator,
+} from 'firebase/functions'
+import { GlobalSolve, ProviderType } from '../types'
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -34,11 +40,33 @@ const firebaseConfig = {
   measurementId: process.env.FIREBASE_MEASUREMENT_ID,
 }
 
+// Same ports as `emulators` in firebase.json
+const EMULATOR_HOST = 'localhost'
+const EMULATOR_PORTS = { auth: 9099, firestore: 8080, functions: 5001 } as const
+
 function getFirebaseApp() {
-  if (getApps().length === 0) {
-    return initializeApp(firebaseConfig)
+  if (getApps().length > 0) return getApp()
+
+  const app = initializeApp(firebaseConfig)
+
+  // connect*Emulator must run before the first use of each service, so do it right after init
+  if (process.env.FIREBASE_USE_EMULATOR === 'true') {
+    connectAuthEmulator(
+      _getAuth(app),
+      `http://${EMULATOR_HOST}:${EMULATOR_PORTS.auth}`
+    )
+    connectFirestoreEmulator(
+      _getFirestore(app),
+      EMULATOR_HOST,
+      EMULATOR_PORTS.firestore
+    )
+    connectFunctionsEmulator(
+      _getFunctions(app),
+      EMULATOR_HOST,
+      EMULATOR_PORTS.functions
+    )
   }
-  return getApp()
+  return app
 }
 
 export function getAuth() {
@@ -61,51 +89,52 @@ export function useSolve(uid: string) {
   useEffect(() => {
     const db = getFirestore()
 
-    getDoc(doc(db, 'solve', uid)).then((snap) => {
-      if (!snap.exists()) return
-      setSolve(snap.data() as Solve)
-    })
+    getDoc(doc(db, 'solve', uid))
+      .then((snap) => {
+        if (!snap.exists()) return
+        setSolve(snap.data() as Solve)
+      })
+      .catch((e) => console.error('failed to load solve', e))
   }, [uid])
   return { solve } as const
 }
 
+// One document maintained by the answer function, readable without signing in
 export function useGlobalSolve() {
   const [globalSolve, setGlobalSolve] = useState<GlobalSolve>({})
 
   useEffect(() => {
-    const db = getFirestore()
-
-    getDocsFirestore(collection(db, 'solve')).then((snap) => {
-      if (snap.empty) return
-      const lib: GlobalSolve = {}
-
-      snap.forEach((d) => {
-        const solves = d.data() as Solve
-
-        Object.keys(solves)
-          .map(Number)
-          .forEach((k) => {
-            if (!lib[k]) {
-              lib[k] = { count: 0 }
-            }
-            lib[k].count += 1
-          })
+    getDoc(doc(getFirestore(), 'stats', 'solvers'))
+      .then((snap) => {
+        if (!snap.exists()) return
+        setGlobalSolve(snap.data() as GlobalSolve)
       })
-
-      setGlobalSolve(lib)
-    })
+      .catch((e) => console.error('failed to load global solve', e))
   }, [])
   return { globalSolve } as const
 }
 
-export type ProviderType = 'google' | 'twitter'
-
 export async function usableUserId(id: string): Promise<boolean> {
   const db = getFirestore()
-  const q = query(collection(db, 'user'), where('id', '==', id))
+  const indexSnap = await getDoc(doc(db, 'userid', id))
+
+  if (indexSnap.exists()) return false
+
+  // Users registered before /userid existed have no index doc. limit(1) is required by firestore.rules
+  const q = query(collection(db, 'user'), where('id', '==', id), limit(1))
   const snapshot = await getDocs(q)
 
   return snapshot.empty
+}
+
+// firestore.rules only accepts the two docs together; /userid/{id} is what keeps the ID unique
+export async function registerUser(uid: string, id: string) {
+  const db = getFirestore()
+  const batch = writeBatch(db)
+
+  batch.set(doc(db, 'user', uid), { id })
+  batch.set(doc(db, 'userid', id), { uid })
+  await batch.commit()
 }
 
 function getProvider(type: ProviderType) {

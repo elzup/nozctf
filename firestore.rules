@@ -6,34 +6,55 @@ service cloud.firestore {
       return request.auth != null;
     }
     function isUserAuthenticated(uid) {
-      return request.auth.uid == uid;
+      return request.auth != null && request.auth.uid == uid;
     }
     function validId(id) {
-      return id.size() > 0 && id.size() <= 20 && id.matches('^[0-9a-z]+$')
+      return id is string && id.size() > 0 && id.size() <= 20 && id.matches('^[0-9a-z]+$');
+    }
+    function docPath(collection, docId) {
+      return /databases/$(database)/documents/$(collection)/$(docId);
     }
 
     match /user/{uid} {
-      allow read: if isAuthenticated();
+      allow get: if isAuthenticated();
+      // list is only for the ID availability check of users registered before /userid existed.
+      // The limit keeps the whole collection from being dumped in one query.
+      allow list: if isAuthenticated() && request.query.limit <= 1;
+      // Must be written in the same batch as /userid/{id}, which is what makes the ID unique.
       allow create: if isUserAuthenticated(uid)
         && validId(request.resource.data.id)
-        && request.resource.data.keys().hasOnly(['id']);
+        && request.resource.data.keys().hasOnly(['id'])
+        && getAfter(docPath('userid', request.resource.data.id)).data.uid == uid;
       allow update, delete: if false;
-
-      match /img/{imgId} {
-        allow read: if isAuthenticated();
-        allow create, update: if isUserAuthenticated(uid)
-          && request.resource.data.keys().hasOnly(['url', 'name', 'createdAt'])
-          && request.resource.size < 10 * 1024;
-        allow delete: if isUserAuthenticated(uid);
-      }
     }
 
-    match /solve/{docId} {
-      allow read: if isAuthenticated();
+    // Index of taken user IDs. `create` never matches an existing doc, so an ID can be claimed only once.
+    match /userid/{id} {
+      allow get: if isAuthenticated();
+      allow create: if isAuthenticated()
+        && validId(id)
+        && request.resource.data.keys().hasOnly(['uid'])
+        && request.resource.data.uid == request.auth.uid
+        && getAfter(docPath('user', request.auth.uid)).data.id == id;
+      allow list, update, delete: if false;
+    }
+
+    match /solve/{uid} {
+      allow read: if isUserAuthenticated(uid);
       allow create, update, delete: if false;
     }
 
+    // Solver count per question, maintained by the answer function
+    match /stats/{docId} {
+      allow get: if true;
+      allow list, create, update, delete: if false;
+    }
+
     match /ans/{docId} {
+      allow read, create, update, delete: if false;
+    }
+
+    match /ratelimit/{docId} {
       allow read, create, update, delete: if false;
     }
 

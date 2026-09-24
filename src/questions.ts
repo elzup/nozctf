@@ -33,4 +33,8 @@ export const questions: Question[] = [
     num: 8,
     text: 'Non Integer',
   },
+  {
+    num: 9,
+    text: 'PIN Check',
+  },
 ]

@@ -7,48 +7,53 @@
     "@types/react-dom": "^18.3.5"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22.18"
   },
   "license": "MIT",
   "scripts": {
     "dev": "next",
-    "lint": "eslint --ext .ts,.tsx src",
+    "dev:emulator": "cross-env FIREBASE_USE_EMULATOR=true next",
+    "emulators": "npm --prefix functions run build && node scripts/firebase-with-jdk.mts emulators:start --project demo-nozctf",
+    "build": "next build",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "format": "prettier --check .",
+    "format:fix": "prettier --write .",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p functions",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "npm --prefix functions run build && node scripts/firebase-with-jdk.mts emulators:exec --project demo-nozctf --only auth,functions,firestore \"vitest run --config vitest.e2e.config.ts\"",
+    "verify": "yarn lint && yarn format && yarn typecheck && yarn test",
     "serve": "cross-env NODE_ENV=production firebase serve",
-    "deploy": "yarn build && firebase deploy --only hosting",
-    "clean": "rimraf \"dist/functions\" && rimraf \"dist/public\"",
-    "build": "next build"
+    "deploy": "firebase deploy --only hosting",
+    "clean": "rimraf .next out"
   },
   "dependencies": {
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.3",
     "@material-ui/styles": "^4.11.4",
-
-    "dotenv": "^16.5.0",
-    "firebase": "^10.14.1",
+    "firebase": "^12.19.0",
     "formik": "^2.4.9",
-    "next": "^14.2.29",
+    "highlight.js": "^11",
+    "next": "^16.3.5",
     "normalize.css": "^8.0.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-
-    "react-highlight.js": "^1.0.7",
-    "react-use": "^17.6.0",
     "styled-components": "^6.1.18",
-    "use-dark-mode": "^2.3.1",
     "yup": "^1.6.1"
   },
   "devDependencies": {
+    "@firebase/rules-unit-testing": "^5.0.2",
     "@types/node": "^22.15.3",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
-    "@types/react-highlight.js": "^1.0.5",
-    "cpx": "1.5.0",
     "cross-env": "7.0.3",
-    "eslint": "^8.57.1",
-    "eslint-config-nzap": "^5.0.0",
-    "firebase-tools": "^13.29.1",
+    "firebase-tools": "^15.30.2",
+    "oxlint": "^1.83.0",
     "prettier": "^3.5.3",
     "rimraf": "^6.0.1",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "vite": "^8.3.0",
+    "vitest": "^5.0.1"
   }
 }

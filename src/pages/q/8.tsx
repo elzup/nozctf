@@ -4,8 +4,10 @@ import * as Yup from 'yup'
 import Code from '../../components/Code'
 import { TryFormBox } from '../../components/commons'
 import QuestionLayout from '../../components/QuestionLayout'
+import { SIGN_IN_TO_TRY, useCanTry } from '../../components/hooks/useAuth'
 import { questions } from '../../questions'
 import { tryq8 } from '../../service/api'
+import { alertError } from '../../utils'
 
 type Fields = {
   n: number
@@ -16,10 +18,13 @@ const validationSchema = Yup.object().shape({
 })
 
 function SearchForm() {
+  const canTry = useCanTry()
   const { values, handleSubmit, handleChange } = useFormik<Fields>({
     initialValues: { n: 0 },
     onSubmit: ({ n }) => {
-      tryq8(n).then((res) => alert(res.data.message))
+      tryq8(n)
+        .then((res) => alert(res.data.message))
+        .catch(alertError)
     },
     validate: () => ({}),
     validateOnChange: false,
@@ -29,9 +34,9 @@ function SearchForm() {
 
   return (
     <TryFormBox>
-      <Typography>{'integer'}</Typography>
+      <Typography>{'non integer'}</Typography>
       <form onSubmit={handleSubmit}>
-        <Typography>send integer</Typography>
+        <Typography>send non integer</Typography>
         <TextField
           name="n"
           value={values.n}
@@ -43,10 +48,11 @@ function SearchForm() {
           autoComplete="off"
           required
         />
-        <Button type="submit" variant="contained">
+        <Button type="submit" variant="contained" disabled={!canTry}>
           Search
         </Button>
       </form>
+      {!canTry && <Typography>{SIGN_IN_TO_TRY}</Typography>}
     </TryFormBox>
   )
 }
@@ -63,13 +69,10 @@ const isInteger = (n) => n <= parseInt(n)
 
 function eight(n) {
   if (typeof n !== 'number') return 'invalid: no number'
-  if (/* double check !!!! */ !!!Number.isInteger(n)) {
-    if (/* double check !!!!!!! */ isInteger(n)) {
-      return 'FLAG_????????????????????'
-    }
-  }
-
-  return 'non integer'
+  if (n < 0) return 'invalid: negative'
+  if (Number.isInteger(n)) return 'invalid: integer'
+  if (!isInteger(n)) return 'non integer'
+  return 'FLAG_????????????????????'
 }
         `.trim()}
       </Code>

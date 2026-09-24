@@ -1,11 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable @typescript-eslint/no-require-imports */
-
-const webpack = require('webpack')
-
-require('dotenv').config()
-
 const FIREBASE_ENV_KEYS = [
   'FIREBASE_API_KEY',
   'FIREBASE_AUTH_DOMAIN',
@@ -15,19 +7,17 @@ const FIREBASE_ENV_KEYS = [
   'FIREBASE_MESSAGING_SENDER_ID',
   'FIREBASE_APP_ID',
   'FIREBASE_MEASUREMENT_ID',
+  'FIREBASE_USE_EMULATOR',
 ]
+
+// next loads `.env` before this file. `env` only accepts strings, so unset keys are left out
+const env = Object.fromEntries(
+  FIREBASE_ENV_KEYS.filter((key) => process.env[key] !== undefined).map(
+    (key) => [key, process.env[key]]
+  )
+)
 
 module.exports = {
   output: 'export',
-
-  webpack: (config) => {
-    const env = FIREBASE_ENV_KEYS.reduce((acc, key) => {
-      acc[`process.env.${key}`] = JSON.stringify(process.env[key])
-      return acc
-    }, {})
-
-    config.plugins.push(new webpack.DefinePlugin(env))
-
-    return config
-  },
+  env,
 }

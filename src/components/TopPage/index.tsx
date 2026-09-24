@@ -14,6 +14,7 @@ import {
 import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import Link from 'next/link'
 import Router from 'next/router'
+import { useEffect } from 'react'
 import { questions } from '../../questions'
 import { Solve, useGlobalSolve, useSolve } from '../../service/firebase'
 import App from '../App'
@@ -51,7 +52,7 @@ function List({ solve }: { solve?: Solve }) {
                   {q.num} {q.text}
                 </Link>
               </TableCell>
-              <TableCell>{globalSolve?.[q.num]?.count || 0}</TableCell>
+              <TableCell>{globalSolve[q.num] ?? 0}</TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -62,12 +63,16 @@ function List({ solve }: { solve?: Solve }) {
 
 function TopPage() {
   const { login } = useAuth()
+  const needsRegister = login.status === 'auth'
+
+  useEffect(() => {
+    if (needsRegister) Router.push('/register')
+  }, [needsRegister])
 
   if (login.status === 'loading') {
     return <CircularProgress />
   }
   if (login.status === 'auth') {
-    Router.push('/register') // NOTE: not login
     return null
   }
   if (login.status === 'comp') {

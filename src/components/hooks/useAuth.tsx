@@ -22,6 +22,11 @@ export const useAuth = () => {
   return useContext(authContext)
 }
 
+// The try functions only answer signed-in, registered users
+export const useCanTry = () => useAuth().login.status === 'comp'
+
+export const SIGN_IN_TO_TRY = 'sign in to try'
+
 function useProvideAuth() {
   const [login, setLogin] = useState<LoginInfo>({ status: 'loading' })
 
@@ -32,16 +37,20 @@ function useProvideAuth() {
         return
       }
       const { uid } = fuser
-      const db = getFirestore()
-      const userSnap = await getDoc(doc(db, 'user', uid))
 
-      if (!userSnap.exists()) {
-        setLogin({ status: 'auth', uid })
-        return
+      try {
+        const userSnap = await getDoc(doc(getFirestore(), 'user', uid))
+
+        if (!userSnap.exists()) {
+          setLogin({ status: 'auth', uid })
+          return
+        }
+        setLogin({ status: 'comp', user: userSnap.data() as User, uid })
+      } catch (e) {
+        // Without this the whole app stays on 'loading' forever when Firestore is unreachable
+        console.error('failed to load user', e)
+        setLogin({ status: 'none' })
       }
-      const user = userSnap.data() as User
-
-      setLogin({ status: 'comp', user, uid })
     })
 
     return () => unsubscribe()

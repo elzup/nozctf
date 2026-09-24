@@ -1,10 +1,32 @@
 import * as crypto from 'crypto'
-import * as admin from 'firebase-admin'
-import * as functions from 'firebase-functions'
-import 'firebase-functions/lib/logger/compat'
-import { app } from './app'
+import { initializeApp } from 'firebase-admin/app'
+import { FieldValue, getFirestore } from 'firebase-admin/firestore'
+import * as functions from 'firebase-functions/v1'
+import 'firebase-functions/logger/compat'
+import { defineString } from 'firebase-functions/params'
+import { checkPin, eight, existsUser, six } from './challenges'
+import {
+  ANSWER_RATE,
+  nextTimestamps,
+  Q9_RATE,
+  RateLimitRule,
+  TRY_RATE,
+} from './ratelimit'
+import {
+  isShortString,
+  isValidQuestionNum,
+  MAX_FLAG_LENGTH,
+  MAX_INPUT_LENGTH,
+  MAX_PIN_LENGTH,
+} from './validate'
 
-admin.initializeApp()
+initializeApp()
+
+const KEY_Q4 = defineString('KEY_Q4')
+const KEY_Q6 = defineString('KEY_Q6')
+const KEY_Q8 = defineString('KEY_Q8')
+const KEY_Q9PIN = defineString('KEY_Q9PIN')
+const KEY_Q9 = defineString('KEY_Q9')
 
 type SolveQuery = {
   q: number
@@ -15,133 +37,160 @@ type Answer = {
   flagHash: string
 }
 
+async function checkRateLimit(
+  uid: string,
+  rule: RateLimitRule
+): Promise<boolean> {
+  const ref = getFirestore().collection('ratelimit').doc(`${rule.scope}_${uid}`)
+
+  return getFirestore().runTransaction(async (tx) => {
+    const doc = await tx.get(ref)
+    const timestamps = nextTimestamps(
+      doc.data()?.timestamps ?? [],
+      Date.now(),
+      rule
+    )
+
+    if (timestamps === null) return false
+
+    tx.set(ref, { timestamps })
+    return true
+  })
+}
+
+type Denied = { ok: false; message: string }
+
+// Every try function needs a signed-in user so the rate limit has a key
+async function denyReason(
+  context: functions.https.CallableContext,
+  rule: RateLimitRule
+): Promise<Denied | null> {
+  if (!context.auth) return { ok: false, message: 'unauthorized' }
+  if (!(await checkRateLimit(context.auth.uid, rule))) {
+    return { ok: false, message: 'too many requests' }
+  }
+  return null
+}
+
 export const answer = functions.https.onCall(
-  async (data: SolveQuery, context) => {
+  async (data: Partial<SolveQuery> | null, context) => {
     if (!context.auth) {
       return { ok: false }
     }
-    if (
-      typeof data?.q !== 'number' ||
-      !Number.isInteger(data.q) ||
-      data.q < 1 ||
-      data.q > 8
-    ) {
+    const q = data?.q
+    const flag = data?.flag
+
+    if (!isValidQuestionNum(q) || !isShortString(flag, MAX_FLAG_LENGTH)) {
       return { ok: false }
     }
-    if (typeof data?.flag !== 'string' || data.flag.length > 100) {
-      return { ok: false }
+    if (!(await checkRateLimit(context.auth.uid, ANSWER_RATE))) {
+      return { ok: false, message: 'too many requests' }
     }
-    return { ok: await solveQuery(data, context.auth.uid) }
+    return { ok: await solveQuery({ q, flag }, context.auth.uid) }
   }
 )
 
+function isSameHash(a: string, b: string) {
+  const bufA = Buffer.from(a)
+  const bufB = Buffer.from(b)
+
+  // timingSafeEqual throws on different lengths
+  return bufA.length === bufB.length && crypto.timingSafeEqual(bufA, bufB)
+}
+
 async function solveQuery(body: SolveQuery, uid: string) {
-  const user = await admin.firestore().collection('user').doc(uid).get()
+  const db = getFirestore()
+  const user = await db.collection('user').doc(uid).get()
 
   if (!user.exists) return false
 
-  const doc = await admin
-    .firestore()
-    .collection('ans')
-    .doc(String(body.q))
-    .get()
+  const doc = await db.collection('ans').doc(String(body.q)).get()
 
   if (!doc.exists) return false
   const ans = doc.data() as Answer
 
   const ansHash = crypto.createHash('md5').update(body.flag).digest('hex')
 
-  if (ans.flagHash !== ansHash) return false
-  const solveDoc = await admin
-    .firestore()
-    .collection('solve')
-    .doc(user.id)
-    .get()
-
-  if (!solveDoc.exists) {
-    solveDoc.ref.set({})
+  if (typeof ans.flagHash !== 'string' || !isSameHash(ans.flagHash, ansHash)) {
+    return false
   }
 
-  const solves = solveDoc.data()
+  const solveRef = db.collection('solve').doc(uid)
+  const statsRef = db.collection('stats').doc('solvers')
 
-  if (solves && !!solves[body.q]) {
-    return true
-  }
+  // Keep the first solved time even when the same flag is submitted concurrently,
+  // and count each solver once
+  await db.runTransaction(async (tx) => {
+    const solveDoc = await tx.get(solveRef)
 
-  await solveDoc.ref.update({ [body.q]: new Date() })
+    if (solveDoc.data()?.[body.q]) return
+    tx.set(solveRef, { [body.q]: new Date() }, { merge: true })
+    tx.set(statsRef, { [body.q]: FieldValue.increment(1) }, { merge: true })
+  })
 
   return true
 }
 
 export const tryq4 = functions.https.onCall(
-  async ({ searchId }: { searchId: string }, context) => {
-    if (typeof searchId !== 'string' || searchId.length > 100) {
+  async (data: { searchId?: unknown } | null, context) => {
+    const searchId = data?.searchId
+
+    if (!isShortString(searchId, MAX_INPUT_LENGTH)) {
       return { ok: false, message: 'invalid input' }
     }
-    const users = [
-      { id: 'popout', deleted: true },
-      { id: 'molis', deleted: true },
-      { id: 'ben', deleted: true },
-    ]
-    const userById: Record<string, typeof users[0]> = {}
+    const denied = await denyReason(context, TRY_RATE)
 
-    users.forEach((user) => (userById[user.id] = user))
-
-    const existsUser = (searchId: string) => {
-      if (searchId.length > 8) return false
-
-      const user = userById[searchId]
-
-      return user && !user.deleted
-    }
-
+    if (denied) return denied
     if (!existsUser(searchId)) return { ok: false, message: 'User not found' }
 
-    const message = `User found! FLAG_${functions.config().key.q4}`
-
-    return { ok: true, message }
+    return { ok: true, message: `User found! FLAG_${KEY_Q4.value()}` }
   }
 )
 
 export const tryq6 = functions.https.onCall(
-  async ({ word }: { word: string }) => {
-    if (typeof word !== 'string' || word.length > 100) {
+  async (data: { word?: unknown } | null, context) => {
+    const word = data?.word
+
+    if (!isShortString(word, MAX_INPUT_LENGTH)) {
       return { ok: false, message: 'invalid input' }
     }
-    return { ok: true, message: six(word) }
+    const denied = await denyReason(context, TRY_RATE)
+
+    if (denied) return denied
+    return { ok: true, message: six(word, `FLAG_${KEY_Q6.value()}`) }
   }
 )
 
-const FLAG_Q6 = `FLAG_${functions.config().key.q6}`
+export const tryq8 = functions.https.onCall(
+  async (data: { n?: unknown } | null, context) => {
+    const n = data?.n
 
-function six(ssssssQ: string) {
-  if (typeof ssssssQ !== 'string') return 'invalid: no string'
-  if ([...ssssssQ].length > 6) return 'invalid: too long'
-  if (ssssssQ[6] !== 'Q') return 'invalid'
-  return FLAG_Q6
-}
-
-exports.app = functions.runWith({ memory: '128MB' }).https.onRequest(app)
-
-const FLAG_Q8 = `FLAG_${functions.config().key.q8}`
-
-export const tryq8 = functions.https.onCall(async ({ n }: { n: number }) => {
-  if (typeof n !== 'number' || !isFinite(n)) {
-    return { ok: false, message: 'invalid input' }
-  }
-  return { ok: true, message: eight(n) }
-})
-
-// @ts-ignore
-const isInteger = (n: number) => n <= parseInt(n)
-
-function eight(n: number) {
-  if (typeof n !== 'number') return 'invalid: no number'
-  if (/* double check !!!! */ !!!Number.isInteger(n)) {
-    if (/* double check !!!!!!! */ isInteger(n)) {
-      return FLAG_Q8
+    if (typeof n !== 'number' || !isFinite(n)) {
+      return { ok: false, message: 'invalid input' }
     }
-  }
+    const denied = await denyReason(context, TRY_RATE)
 
-  return 'non integer'
-}
+    if (denied) return denied
+    return { ok: true, message: eight(n, `FLAG_${KEY_Q8.value()}`) }
+  }
+)
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+
+export const tryq9 = functions.https.onCall(
+  async (data: { pin?: unknown } | null, context) => {
+    const pin = data?.pin
+
+    if (!isShortString(pin, MAX_PIN_LENGTH)) {
+      return { ok: false, message: 'invalid input' }
+    }
+    const denied = await denyReason(context, Q9_RATE)
+
+    if (denied) return denied
+    if (!(await checkPin(pin, KEY_Q9PIN.value(), sleep))) {
+      return { ok: false, message: 'wrong pin' }
+    }
+
+    return { ok: true, message: `Correct! FLAG_${KEY_Q9.value()}` }
+  }
+)

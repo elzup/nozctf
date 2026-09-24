@@ -21,13 +21,13 @@ const validationSchema = Yup.object().shape({
 function AnswerForm(props: Props) {
   const { values, setFieldValue, handleSubmit } = useFormik<Fields>({
     initialValues: { flag: '' },
-    onSubmit: (values, { setErrors }) => {
+    onSubmit: (fields, { setErrors }) => {
       if (props.disabled) {
         alert('Need user sign in')
         return
       }
 
-      props.onSubmit(values, setErrors)
+      props.onSubmit(fields, setErrors)
     },
     validate: () => ({}),
 

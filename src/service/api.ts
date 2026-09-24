@@ -1,15 +1,15 @@
 import { httpsCallable } from 'firebase/functions'
-import { getFunctions, getAuth } from './firebase'
-
-const API_BASE = 'https://nozctf.web.app'
+import config from '../config'
+import { getFunctions } from './firebase'
 
 type MessageResponse = { ok: boolean; message: string }
+type SolveResponse = { ok: boolean; message?: string }
 
 export async function solve(q: number, flag: string) {
-  const answerFn = httpsCallable<
-    { q: number; flag: string },
-    { ok: boolean }
-  >(getFunctions(), 'answer')
+  const answerFn = httpsCallable<{ q: number; flag: string }, SolveResponse>(
+    getFunctions(),
+    'answer'
+  )
 
   return answerFn({ q, flag })
 }
@@ -41,8 +41,17 @@ export async function tryq8(n: number) {
   return fn({ n })
 }
 
+export async function tryq9(pin: string) {
+  const fn = httpsCallable<{ pin: string }, MessageResponse>(
+    getFunctions(),
+    'tryq9'
+  )
+
+  return fn({ pin })
+}
+
 export async function tryq7(searchWord: string) {
-  const response = await fetch(`${API_BASE}/tryq7`, {
+  const response = await fetch(`${config.baseUrl}/tryq7`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ searchWord }),
@@ -52,25 +61,4 @@ export async function tryq7(searchWord: string) {
     throw new Error(`HTTP error! status: ${response.status}`)
   }
   return { data: await response.text() }
-}
-
-export async function preTry(searchWord: string) {
-  const user = getAuth().currentUser
-
-  if (!user) return false
-  const idToken = await user.getIdToken()
-
-  const response = await fetch(`${API_BASE}/try`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${idToken}`,
-    },
-    body: JSON.stringify({ searchWord }),
-  })
-
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`)
-  }
-  return { data: await response.json() }
 }

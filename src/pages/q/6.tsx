@@ -4,8 +4,10 @@ import * as Yup from 'yup'
 import Code from '../../components/Code'
 import { TryFormBox } from '../../components/commons'
 import QuestionLayout from '../../components/QuestionLayout'
+import { SIGN_IN_TO_TRY, useCanTry } from '../../components/hooks/useAuth'
 import { questions } from '../../questions'
 import { tryq6 } from '../../service/api'
+import { alertError } from '../../utils'
 
 type Fields = {
   word: string
@@ -16,10 +18,13 @@ const validationSchema = Yup.object().shape({
 })
 
 function SearchForm() {
+  const canTry = useCanTry()
   const { handleSubmit, values, errors, handleChange } = useFormik<Fields>({
     initialValues: { word: '' },
     onSubmit: ({ word }) => {
-      tryq6(word).then((res) => alert(res.data.message))
+      tryq6(word)
+        .then((res) => alert(res.data.message))
+        .catch(alertError)
     },
     validate: () => ({}),
     validateOnChange: false,
@@ -45,10 +50,11 @@ function SearchForm() {
           required
         />
         <Typography>)</Typography>
-        <Button type="submit" variant="contained">
+        <Button type="submit" variant="contained" disabled={!canTry}>
           {'⏎'}
         </Button>
       </form>
+      {!canTry && <Typography>{SIGN_IN_TO_TRY}</Typography>}
     </TryFormBox>
   )
 }

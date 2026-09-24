@@ -1,7 +1,0 @@
-{
-  "extends": ["nzap", "nzap/tsx"],
-  "rules": {
-    "react/react-in-jsx-scope": 0,
-    "react/display-name": 0
-  }
-}

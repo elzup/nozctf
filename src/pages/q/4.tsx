@@ -4,8 +4,10 @@ import * as Yup from 'yup'
 import Code from '../../components/Code'
 import { TryFormBox } from '../../components/commons'
 import QuestionLayout from '../../components/QuestionLayout'
+import { SIGN_IN_TO_TRY, useCanTry } from '../../components/hooks/useAuth'
 import { questions } from '../../questions'
 import { tryq4 } from '../../service/api'
+import { alertError } from '../../utils'
 
 type Fields = {
   searchId: string
@@ -16,11 +18,14 @@ const validationSchema = Yup.object().shape({
 })
 
 function SearchForm() {
+  const canTry = useCanTry()
   const { values, setFieldValue, handleSubmit } = useFormik<Fields>({
     initialValues: { searchId: '' },
     onSubmit: ({ searchId }) => {
       if (!preTry(searchId)) return alert('User not found')
-      tryq4(searchId).then((res) => alert(res.data.message))
+      tryq4(searchId)
+        .then((res) => alert(res.data.message))
+        .catch(alertError)
     },
     validate: () => ({}),
     validateOnChange: false,
@@ -46,10 +51,11 @@ function SearchForm() {
           autoComplete="off"
           required
         />
-        <Button type="submit" variant="contained">
+        <Button type="submit" variant="contained" disabled={!canTry}>
           Search
         </Button>
       </form>
+      {!canTry && <Typography>{SIGN_IN_TO_TRY}</Typography>}
     </TryFormBox>
   )
 }
@@ -99,7 +105,7 @@ const users = [
   { id: 'molis', deleted: true },
   { id: 'ben', deleted: true },
 ]
-const userById: Record<string, typeof users[0]> = {}
+const userById: Record<string, (typeof users)[0]> = {}
 
 users.forEach((user) => {
   userById[user.id] = user
