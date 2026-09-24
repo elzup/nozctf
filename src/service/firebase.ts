@@ -28,7 +28,6 @@ import {
   connectFunctionsEmulator,
 } from 'firebase/functions'
 import { GlobalSolve, ProviderType } from '../types'
-import { countSolves } from './countSolves'
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -100,20 +99,18 @@ export function useSolve(uid: string) {
   return { solve } as const
 }
 
-// firestore.rules only lets signed-in users read `solve`, so skip the query otherwise
-export function useGlobalSolve(canRead: boolean) {
+// One document maintained by the answer function, readable without signing in
+export function useGlobalSolve() {
   const [globalSolve, setGlobalSolve] = useState<GlobalSolve>({})
 
   useEffect(() => {
-    if (!canRead) return
-    const db = getFirestore()
-
-    getDocs(collection(db, 'solve'))
+    getDoc(doc(getFirestore(), 'stats', 'solvers'))
       .then((snap) => {
-        setGlobalSolve(countSolves(snap.docs.map((d) => d.data() as Solve)))
+        if (!snap.exists()) return
+        setGlobalSolve(snap.data() as GlobalSolve)
       })
       .catch((e) => console.error('failed to load global solve', e))
-  }, [canRead])
+  }, [])
   return { globalSolve } as const
 }
 

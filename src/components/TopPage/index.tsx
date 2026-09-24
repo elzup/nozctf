@@ -27,7 +27,7 @@ function ListWithLogin({ uid }: { uid: string }) {
 }
 
 function List({ solve }: { solve?: Solve }) {
-  const { globalSolve } = useGlobalSolve(solve !== undefined)
+  const { globalSolve } = useGlobalSolve()
 
   return (
     <TableContainer component={Paper}>
@@ -52,7 +52,7 @@ function List({ solve }: { solve?: Solve }) {
                   {q.num} {q.text}
                 </Link>
               </TableCell>
-              <TableCell>{globalSolve?.[q.num]?.count || 0}</TableCell>
+              <TableCell>{globalSolve[q.num] ?? 0}</TableCell>
             </TableRow>
           ))}
         </TableBody>

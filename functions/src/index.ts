@@ -1,6 +1,6 @@
 import * as crypto from 'crypto'
 import { initializeApp } from 'firebase-admin/app'
-import { getFirestore } from 'firebase-admin/firestore'
+import { FieldValue, getFirestore } from 'firebase-admin/firestore'
 import * as functions from 'firebase-functions/v1'
 import 'firebase-functions/logger/compat'
 import { defineString } from 'firebase-functions/params'
@@ -116,13 +116,16 @@ async function solveQuery(body: SolveQuery, uid: string) {
   }
 
   const solveRef = db.collection('solve').doc(uid)
+  const statsRef = db.collection('stats').doc('solvers')
 
-  // Keep the first solved time even when the same flag is submitted concurrently
+  // Keep the first solved time even when the same flag is submitted concurrently,
+  // and count each solver once
   await db.runTransaction(async (tx) => {
     const solveDoc = await tx.get(solveRef)
 
     if (solveDoc.data()?.[body.q]) return
     tx.set(solveRef, { [body.q]: new Date() }, { merge: true })
+    tx.set(statsRef, { [body.q]: FieldValue.increment(1) }, { merge: true })
   })
 
   return true

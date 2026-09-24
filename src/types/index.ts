@@ -24,10 +24,9 @@ export type LoginInfo =
       user: User
     }
 
+/** Solver count per question, as stored in stats/solvers */
 export type GlobalSolve = {
-  [quesitonId: number]: {
-    count: number
-  }
+  [questionNum: number]: number
 }
 
 export const PROVIDER_TYPE_GOOGLE = 'google'

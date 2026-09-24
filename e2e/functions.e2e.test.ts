@@ -92,6 +92,21 @@ describe('answer', () => {
     expect((await getDoc(solveRef)).data()).toEqual(first)
   })
 
+  it('counts each solver once in stats/solvers', async () => {
+    const first = await newRegisteredClient()
+    const second = await newRegisteredClient()
+    const statsRef = doc(guest.db, 'stats', 'solvers')
+
+    expect((await getDoc(statsRef)).exists()).toBe(false)
+
+    await first.call('answer', { q: 1, flag: Q1_FLAG })
+    await first.call('answer', { q: 1, flag: Q1_FLAG })
+    expect((await getDoc(statsRef)).data()).toEqual({ 1: 1 })
+
+    await second.call('answer', { q: 1, flag: Q1_FLAG })
+    expect((await getDoc(statsRef)).data()).toEqual({ 1: 2 })
+  })
+
   it.each([
     [{ q: 0, flag: Q1_FLAG }],
     [{ q: 10, flag: Q1_FLAG }],

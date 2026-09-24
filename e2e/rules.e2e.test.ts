@@ -145,15 +145,25 @@ describe('reads', () => {
   it('rejects guests', async () => {
     await assertFails(asGuest().doc('user/alice').get())
     await assertFails(asGuest().doc('userid/alice01').get())
-    await assertFails(asGuest().collection('solve').get())
+    await assertFails(asGuest().doc('solve/alice').get())
   })
 })
 
 describe('server-only collections', () => {
-  it('solve is read-only for clients', async () => {
-    await assertSucceeds(asUser('alice').collection('solve').get())
+  it('solve is readable by its owner only', async () => {
+    await assertSucceeds(asUser('alice').doc('solve/alice').get())
+    await assertFails(asUser('bob').doc('solve/alice').get())
+    await assertFails(asUser('alice').collection('solve').get())
     await assertFails(asUser('alice').doc('solve/alice').set({ 1: new Date() }))
     await assertFails(asUser('alice').doc('solve/alice').delete())
+  })
+
+  it('stats is readable by anyone, one document at a time', async () => {
+    await assertSucceeds(asGuest().doc('stats/solvers').get())
+    await assertSucceeds(asUser('alice').doc('stats/solvers').get())
+    await assertFails(asGuest().collection('stats').get())
+    await assertFails(asUser('alice').doc('stats/solvers').set({ 1: 999 }))
+    await assertFails(asUser('alice').doc('stats/solvers').delete())
   })
 
   it.each(['ans/1', 'ratelimit/answer_alice', 'anything/else'])(

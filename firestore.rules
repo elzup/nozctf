@@ -39,9 +39,15 @@ service cloud.firestore {
       allow list, update, delete: if false;
     }
 
-    match /solve/{docId} {
-      allow read: if isAuthenticated();
+    match /solve/{uid} {
+      allow read: if isUserAuthenticated(uid);
       allow create, update, delete: if false;
+    }
+
+    // Solver count per question, maintained by the answer function
+    match /stats/{docId} {
+      allow get: if true;
+      allow list, create, update, delete: if false;
     }
 
     match /ans/{docId} {

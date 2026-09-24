@@ -70,14 +70,24 @@ node scripts/backfill-userid.mts --project nozctf           # dry run
 node scripts/backfill-userid.mts --project nozctf --apply
 ```
 
+`stats/solvers` (solver count per question) is maintained by the `answer` function. Build it once
+from the existing `solve` documents after deploying functions; re-running is safe:
+
+```sh
+cd functions
+node scripts/backfill-stats.mts --project nozctf           # dry run
+node scripts/backfill-stats.mts --project nozctf --apply
+```
+
 `/tryq7` (Q7, C#) is served by a function that is not part of this repository.
 
 ## Firestore
 
-| collection  | written by | note                                          |
-| ----------- | ---------- | --------------------------------------------- |
-| `user`      | client     | `{ id }`, create only, together with `userid` |
-| `userid`    | client     | `{ uid }` per user ID, makes the ID unique    |
-| `solve`     | functions  | `{ [questionNum]: solvedAt }` per uid         |
-| `ans`       | admin      | `{ flagHash }` (md5 of the flag) per question |
-| `ratelimit` | functions  | request timestamps per `{scope}_{uid}`        |
+| collection  | written by | note                                                   |
+| ----------- | ---------- | ------------------------------------------------------ |
+| `user`      | client     | `{ id }`, create only, together with `userid`          |
+| `userid`    | client     | `{ uid }` per user ID, makes the ID unique             |
+| `solve`     | functions  | `{ [questionNum]: solvedAt }` per uid, owner-only read |
+| `stats`     | functions  | `solvers`: `{ [questionNum]: count }`, public read     |
+| `ans`       | admin      | `{ flagHash }` (md5 of the flag) per question          |
+| `ratelimit` | functions  | request timestamps per `{scope}_{uid}`                 |
