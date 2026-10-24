@@ -9,7 +9,7 @@ const Q9_PIN = '4271'
 const FLAGS = { q9: 'FLAG_e2eq9' } as const
 
 const Q1_FLAG = 'FLAG_e2eanswer'
-// Same as ANSWER_RATE.limit / TRY_RATE.limit in functions/src/ratelimit.ts
+// Same as the minute windows of ANSWER_RATE / TRY_RATE in functions/src/ratelimit.ts
 const ANSWER_LIMIT = 20
 const TRY_LIMIT = 30
 // A matching digit costs 300ms on the server. Half of it still separates it from jitter
