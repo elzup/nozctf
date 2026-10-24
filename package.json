@@ -2,10 +2,6 @@
   "name": "nozctf",
   "version": "1.0.0",
   "description": "nozctf web app",
-  "resolutions": {
-    "@types/react": "^18.3.18",
-    "@types/react-dom": "^18.3.5"
-  },
   "engines": {
     "node": ">=22.18"
   },
@@ -17,13 +13,13 @@
     "build": "next build",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
-    "format": "prettier --check .",
-    "format:fix": "prettier --write .",
+    "format": "oxfmt --check",
+    "format:fix": "oxfmt",
     "typecheck": "tsc --noEmit && tsc --noEmit -p functions",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "npm --prefix functions run build && node scripts/firebase-with-jdk.mts emulators:exec --project demo-nozctf --only auth,functions,firestore \"vitest run --config vitest.e2e.config.ts\"",
-    "verify": "yarn lint && yarn format && yarn typecheck && yarn test",
+    "verify": "pnpm lint && pnpm format && pnpm typecheck && pnpm test",
     "serve": "cross-env NODE_ENV=production firebase serve",
     "deploy": "firebase deploy --only hosting",
     "clean": "rimraf .next out"
@@ -35,7 +31,7 @@
     "firebase": "^12.19.0",
     "formik": "^2.4.9",
     "highlight.js": "^11",
-    "next": "^16.4.3",
+    "next": "16.4.2",
     "normalize.css": "^8.0.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -47,13 +43,15 @@
     "@types/node": "^22.15.3",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
-    "cross-env": "7.0.3",
+    "cross-env": "^10.1.0",
     "firebase-tools": "^15.34.1",
+    "oxfmt": "^0.74.0",
     "oxlint": "^1.83.0",
     "prettier": "^3.5.3",
     "rimraf": "^6.0.1",
-    "typescript": "^5.7.3",
+    "typescript": "^7.0.2",
     "vite": "^8.3.5",
     "vitest": "^5.0.5"
-  }
+  },
+  "packageManager": "pnpm@12.15.0"
 }
