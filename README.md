@@ -90,4 +90,4 @@ node scripts/backfill-stats.mts --project nozctf --apply
 | `solve`     | functions  | `{ [questionNum]: solvedAt }` per uid, owner-only read |
 | `stats`     | functions  | `solvers`: `{ [questionNum]: count }`, public read     |
 | `ans`       | admin      | `{ flagHash }` (md5 of the flag) per question          |
-| `ratelimit` | functions  | request timestamps per `{scope}_{uid}`                 |
+| `ratelimit` | functions  | request timestamps per `{scope}_{uid}` (min + day cap) |
