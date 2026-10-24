@@ -13,6 +13,18 @@
       { "source": "/tryq8", "function": "tryq8" },
       { "source": "/tryq9", "function": "tryq9" }
     ],
+    "headers": [
+      {
+        "source": "**",
+        "headers": [
+          { "key": "X-Content-Type-Options", "value": "nosniff" },
+          {
+            "key": "Referrer-Policy",
+            "value": "strict-origin-when-cross-origin"
+          }
+        ]
+      }
+    ],
     "predeploy": "yarn build",
     "cleanUrls": true
   },
