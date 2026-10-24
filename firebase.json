@@ -25,7 +25,7 @@
         ]
       }
     ],
-    "predeploy": "yarn build",
+    "predeploy": "pnpm build",
     "cleanUrls": true
   },
   "emulators": {

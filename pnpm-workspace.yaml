@@ -1,0 +1,8 @@
+allowBuilds:
+  '@firebase/util': false
+  protobufjs: false
+  re2: false
+overrides:
+  # MUI v4 declares React 16/17 types; keep them on 18 to match react
+  '@types/react': ^18.3.18
+  '@types/react-dom': ^18.3.5

@@ -7,8 +7,8 @@ https://nozctf.web.app
 ## Setup
 
 ```sh
-yarn install
-(cd functions && npm install)
+pnpm install
+(cd functions && npm install)   # functions stay on npm: the Cloud Functions build installs from package-lock.json
 ```
 
 ### Web (`/`)
@@ -27,25 +27,25 @@ FIREBASE_MEASUREMENT_ID=
 ```
 
 ```sh
-yarn dev
+pnpm dev
 ```
 
 ## Check
 
-| command          | what                                                                  |
-| ---------------- | --------------------------------------------------------------------- |
-| `yarn lint`      | [oxlint](https://oxc.rs/docs/guide/usage/linter)                      |
-| `yarn format`    | prettier (`yarn format:fix` to write)                                 |
-| `yarn typecheck` | tsc for the web app and functions                                     |
-| `yarn test`      | unit tests (vitest): `src/**/*.test.ts`, `functions/src/**/*.test.ts` |
-| `yarn verify`    | all of the above                                                      |
-| `yarn test:e2e`  | `e2e/` against the Firebase emulators (needs JDK 21+)                 |
+| command          | what                                                                            |
+| ---------------- | ------------------------------------------------------------------------------- |
+| `pnpm lint`      | [oxlint](https://oxc.rs/docs/guide/usage/linter)                                |
+| `pnpm format`    | [oxfmt](https://oxc.rs/docs/guide/usage/formatter) (`pnpm format:fix` to write) |
+| `pnpm typecheck` | tsc (TypeScript 7) for the web app and functions                                |
+| `pnpm test`      | unit tests (vitest): `src/**/*.test.ts`, `functions/src/**/*.test.ts`           |
+| `pnpm verify`    | all of the above                                                                |
+| `pnpm test:e2e`  | `e2e/` against the Firebase emulators (needs JDK 21+)                           |
 
-`yarn test:e2e` starts the auth / functions / firestore emulators as the project `demo-nozctf`,
+`pnpm test:e2e` starts the auth / functions / firestore emulators as the project `demo-nozctf`,
 so it never touches the real project. It covers `firestore.rules` and the callable functions
 with the test-only flags in `functions/.env.demo-nozctf`.
 
-To use the app itself against the emulators, run `yarn emulators` and `yarn dev:emulator` in two terminals.
+To use the app itself against the emulators, run `pnpm emulators` and `pnpm dev:emulator` in two terminals.
 
 This repository is public: keep the intended solutions of the questions out of the tests.
 
@@ -57,7 +57,7 @@ Copy `functions/.env.example` to `functions/.env` and fill in the values. `.env`
 ## Deploy
 
 ```sh
-yarn deploy                               # hosting (runs `next build` -> out/)
+pnpm deploy                               # hosting (runs `next build` -> out/)
 (cd functions && npm run deploy)          # functions
 firebase deploy --only firestore:rules    # rules
 ```

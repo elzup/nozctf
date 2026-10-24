@@ -13,8 +13,7 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "noEmit": true,
-    "lib": ["es6", "dom", "es2016"],
-    "baseUrl": ".",
+    "lib": ["dom", "dom.iterable", "esnext"],
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
@@ -22,5 +21,5 @@
     "incremental": true
   },
   "exclude": ["node_modules"],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.mts"]
 }
